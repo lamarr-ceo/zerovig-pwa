@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" fill="none">
+  <defs>
+    <!-- Subtle radial OLED instrument sheen -->
+    <radialGradient id="oledSheen" cx="50%" cy="32%" r="68%" fx="50%" fy="32%">
+      <stop offset="0%" stop-color="#151923"/>
+      <stop offset="58%" stop-color="#06070B"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </radialGradient>
+
+    <!-- Frosted Titanium Inner Specular Rim -->
+    <linearGradient id="titaniumRim" x1="512" y1="0" x2="512" y2="1024" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F5F7FA" stop-opacity="0.22"/>
+      <stop offset="35%" stop-color="#181A20" stop-opacity="0.65"/>
+      <stop offset="100%" stop-color="#181A20" stop-opacity="0.90"/>
+    </linearGradient>
+
+    <!-- Apple Emerald Calibration Glow -->
+    <radialGradient id="emeraldGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#30D158" stop-opacity="0.55"/>
+      <stop offset="55%" stop-color="#30D158" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#30D158" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Emerald Horizon Bar Gradient -->
+    <linearGradient id="horizonEmerald" x1="168" y1="612" x2="656" y2="612" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#30D158" stop-opacity="0.35"/>
+      <stop offset="35%" stop-color="#30D158" stop-opacity="0.92"/>
+      <stop offset="100%" stop-color="#30D158" stop-opacity="1"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Pure #000000 OLED Void Base (Full bleed for iOS 1024x1024 App Store master) -->
+  <rect width="1024" height="1024" fill="#000000"/>
+  <rect width="1024" height="1024" fill="url(#oledSheen)"/>
+
+  <!-- Subtle #181A20 Frosted Titanium Inner Specular Bevel -->
+  <rect x="18" y="18" width="988" height="988" rx="216" fill="none" stroke="url(#titaniumRim)" stroke-width="3"/>
+
+  <!-- Subtle Instrument Calibration Tick Marks -->
+  <g stroke="#A1A7B3" stroke-opacity="0.22" stroke-width="3" stroke-linecap="round">
+    <line x1="176" y1="590" x2="176" y2="602"/>
+    <line x1="344" y1="593" x2="344" y2="601"/>
+    <line x1="512" y1="588" x2="512" y2="602"/>
+    <line x1="680" y1="593" x2="680" y2="601"/>
+    <line x1="848" y1="590" x2="848" y2="602"/>
+  </g>
+
+  <!-- Ultra-Tracked Uppercase ZEROVIG Wordmark in #F5F7FA Crisp Signal White -->
+  <text
+    x="528"
+    y="492"
+    text-anchor="middle"
+    fill="#F5F7FA"
+    font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Helvetica Neue', sans-serif"
+    font-size="112"
+    font-weight="800"
+    letter-spacing="28"
+  >ZEROVIG</text>
+
+  <!-- Horizon Gauge Track (Unshaded Retail Reference Track) -->
+  <line
+    x1="176"
+    y1="628"
+    x2="848"
+    y2="628"
+    stroke="#F5F7FA"
+    stroke-opacity="0.20"
+    stroke-width="14"
+    stroke-linecap="round"
+  />
+
+  <!-- Active Emerald True-Line Horizon Bar -->
+  <line
+    x1="176"
+    y1="628"
+    x2="656"
+    y2="628"
+    stroke="url(#horizonEmerald)"
+    stroke-width="18"
+    stroke-linecap="round"
+  />
+
+  <!-- Subtle Glow Halo around Live-Calibration Node -->
+  <circle cx="656" cy="628" r="68" fill="url(#emeraldGlow)"/>
+
+  <!-- Live-Calibration Node (Outer Signal White Ring + Apple Emerald Core) -->
+  <circle cx="656" cy="628" r="26" fill="#000000" stroke="#F5F7FA" stroke-width="10"/>
+  <circle cx="656" cy="628" r="14" fill="#30D158"/>
+</svg>

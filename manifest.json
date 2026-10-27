@@ -1,0 +1,63 @@
+{
+  "id": "https://zerovig.app/",
+  "name": "ZeroVig \u2014 Odds Intelligence & Slip Auditor",
+  "short_name": "ZeroVig",
+  "description": "Strip the shading. See the true line. Multi-book de-vigged consensus, empirical correlation copulas, and 1-tap slip auditing across 20 sportsbooks and DFS apps.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "categories": [
+    "sports",
+    "finance",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Audit Active Slip",
+      "short_name": "Audit Slip",
+      "description": "Open your active slip drawer and run a 20-book Pro Engine audit",
+      "url": "/?tab=audit&source=pwa_shortcut",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Live +EV Prop Board",
+      "short_name": "Live Board",
+      "description": "Browse live de-vigged player props across NBA, NFL, NHL, and MLB",
+      "url": "/?tab=board&source=pwa_shortcut",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
