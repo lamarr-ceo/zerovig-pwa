@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zerovig-pwa-v5';
+const CACHE_NAME = 'zerovig-pwa-v6';
 const ASSETS = [
   '/manifest.json',
   '/icon-192.png',
