@@ -2240,13 +2240,7 @@
       sport: "ALL",
       game: "All Props",
       search: "",
-      slip: (FEED_META.defaultSlip && FEED_META.defaultSlip.length)
-        ? FEED_META.defaultSlip.map(x => ({ id: x.id, side: (x.side || "over").toLowerCase(), altIdx: x.altIdx ?? null }))
-        : [
-            { id: "jrue_holiday_points", side: "over", altIdx: null },
-            { id: "morgan_geekie_shots", side: "under", altIdx: null },
-            { id: "luka_doncic_points",  side: "over", altIdx: null }
-          ],
+      slip: [],
       selectedFixMode: "swap",
       altSelections: {},
       autoBuildTier: "3pick"
@@ -2291,13 +2285,8 @@
             if (FEED_META.sourceCounts.fanduel) BOOKS_META.fanduel.count = `${FEED_META.sourceCounts.fanduel.toLocaleString()} Lines`;
             if (FEED_META.sourceCounts.kambi) BOOKS_META.betmgm.count = `${FEED_META.sourceCounts.kambi.toLocaleString()} Lines`;
           }
-          // Ensure slip items still exist in PROPS
-          const validSlip = state.slip.filter(s => PROPS.some(p => p.id === s.id));
-          if (validSlip.length === 0 && Array.isArray(FEED_META.defaultSlip)) {
-            state.slip = FEED_META.defaultSlip.map(x => ({ id: x.id, side: (x.side || "over").toLowerCase(), altIdx: x.altIdx ?? null }));
-          } else {
-            state.slip = validSlip;
-          }
+          // Keep only user-selected slip items that still exist in PROPS
+          state.slip = state.slip.filter(s => PROPS.some(p => p.id === s.id));
           updateLiveStatusStrip();
           renderAll();
           if (manual) showToast(`Synced ${PROPS.length} live props (${(FEED_META.totalLinesScanned || 0).toLocaleString()} lines)`);
@@ -2386,6 +2375,13 @@
     function removeLeg(propId) {
       state.slip = state.slip.filter(x => x.id !== propId);
       renderAll();
+    }
+
+    function clearSlip(e) {
+      if (e) e.stopPropagation();
+      state.slip = [];
+      renderAll();
+      showToast("Cleared all picks from your slip");
     }
 
     function getBestSwapProp() {
@@ -2598,7 +2594,10 @@
               <div class="sc-info-sub" style="color:${subColor};">${subText}</div>
             </div>
           </div>
-          <div class="sc-cta-pill">Audit Slip <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="13" x2="8" y2="3"/><polyline points="4 7 8 3 12 7"/></svg></div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div onclick="clearSlip(event)" title="Clear all picks" style="padding:5px 9px;border-radius:999px;background:rgba(255,255,255,0.08);border:0.5px solid rgba(255,255,255,0.16);color:#A3ABB8;font-size:10.5px;font-weight:600;cursor:pointer;">Clear</div>
+            <div class="sc-cta-pill">Audit Slip <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="13" x2="8" y2="3"/><polyline points="4 7 8 3 12 7"/></svg></div>
+          </div>
         </div>
       `;
     }
@@ -2638,9 +2637,12 @@
       if (m.legs.length === 0) {
         container.innerHTML = `
           <div class="sheet-wrap" style="justify-content:center;align-items:center;text-align:center;gap:14px;">
-            <div style="font-size:15px;font-weight:700;color:#F5F7FA;">Your Slip Is Empty</div>
-            <div style="font-size:12px;color:#8A93A2;max-width:260px;">Tap Over or Under on any live Tuesday Oct 27 prop on the Board, or generate a ready-to-play slip in Auto-Build.</div>
-            <div class="primary-btn" style="width:220px;" onclick="switchTab('board')">Browse Live Board</div>
+            <div style="font-size:15px;font-weight:700;color:#F5F7FA;">Your Slip Is Empty (0 Picks)</div>
+            <div style="font-size:12px;color:#8A93A2;max-width:270px;line-height:1.45;">Tap <strong>Over</strong> or <strong>Under</strong> on any player card on the Board to build your own slip, or tap <strong>Auto-Build</strong> to load tonight's highest-edge slip.</div>
+            <div style="display:flex;flex-direction:column;gap:8px;width:230px;">
+              <div class="primary-btn" onclick="switchTab('board')">Browse Live Board</div>
+              <div class="primary-btn" style="background:#161A23;color:#F5F7FA;border:0.5px solid rgba(255,255,255,0.16);box-shadow:none;" onclick="switchTab('autobuild')">Open Auto-Build Presets</div>
+            </div>
           </div>
         `;
         return;
@@ -2675,7 +2677,10 @@
         container.innerHTML = `
           <div class="sheet-wrap">
             <div>
-              <div class="sheet-handle"></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                <span style="font-size:11px;font-weight:600;color:#8A93A2;">Active Slip (${m.legs.length} Pick${m.legs.length > 1 ? 's' : ''})</span>
+                <span onclick="clearSlip(event)" style="font-size:11px;font-weight:600;color:#FF6961;background:rgba(255,69,58,0.12);border:0.5px solid rgba(255,69,58,0.3);padding:3px 9px;border-radius:999px;cursor:pointer;">Clear All ✕</span>
+              </div>
               <div class="audit-hero">
                 <div>
                   <div class="ah-grades">
@@ -2758,7 +2763,10 @@
         container.innerHTML = `
           <div class="sheet-wrap">
             <div>
-              <div class="sheet-handle"></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                <span style="font-size:11px;font-weight:600;color:#8A93A2;">Active Slip (${m.legs.length} Pick${m.legs.length > 1 ? 's' : ''})</span>
+                <span onclick="clearSlip(event)" style="font-size:11px;font-weight:600;color:#FF6961;background:rgba(255,69,58,0.12);border:0.5px solid rgba(255,69,58,0.3);padding:3px 9px;border-radius:999px;cursor:pointer;">Clear All ✕</span>
+              </div>
               <div class="audit-hero" style="border-color:rgba(48,209,88,0.45);background:linear-gradient(180deg,rgba(48,209,88,0.12) 0%,#14171F 100%);">
                 <div>
                   <div class="ah-grades">
@@ -3085,7 +3093,7 @@
 
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/service-worker.js?v=4").catch(() => {});
+        navigator.serviceWorker.register("/service-worker.js?v=5").catch(() => {});
       });
     }
 
