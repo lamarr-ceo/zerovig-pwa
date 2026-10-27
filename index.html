@@ -6,12 +6,20 @@
   <title>ZeroVig — Strip the shading. See the true line.</title>
   <meta name="description" content="Real-time de-vigged probabilities and 1-tap slip auditing across 20 sportsbooks and pick'em apps." />
   <link rel="canonical" href="https://zerovig.app/" />
-  <link rel="manifest" href="/manifest.json" />
-  <meta name="theme-color" content="#000000" />
+  <link rel="manifest" href="/manifest.json?v=7" />
+  <meta name="theme-color" content="#0B0F0E" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="ZeroVig" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg?v=7" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png?v=7" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png?v=7" />
+  <meta property="og:title" content="ZeroVig — See the Odds. Find the Edge." />
+  <meta property="og:description" content="Real-time de-vigged probabilities and 1-tap slip auditing across 20 sportsbooks and pick'em apps." />
+  <meta property="og:image" content="https://zerovig.app/icons/og-card.png?v=7" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
   <style>
   
   * {
@@ -2135,7 +2143,7 @@
 
     <!-- Top App Header with Unboxed Horizon Delta Wordmark & On-the-Fly Book Switcher -->
     <div class="app-header">
-      <div class="brand-logo" onclick="switchTab('board')" style="cursor:pointer;"><svg width="108" height="22" viewBox="0 0 108 22" fill="none" xmlns="http://www.w3.org/2000/svg"><text x="0" y="12" fill="#F5F7FA" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', sans-serif" font-size="13.5" font-weight="700" letter-spacing="2.97">ZEROVIG</text><line x1="1" y1="18.5" x2="100" y2="18.5" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-linecap="round"/><line x1="1" y1="18.5" x2="68" y2="18.5" stroke="#30D158" stroke-width="1.2" stroke-linecap="round"/><circle cx="68" cy="18.5" r="2.2" fill="#30D158"/></svg></div>
+      <div class="brand-logo" onclick="switchTab('board')" style="cursor:pointer;"><span style="display:inline-flex;align-items:center;gap:7px;"><svg width="30" height="30" viewBox="18 22 174 166" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;"><path d="M 41.68 58.00 A 74.0 74.0 0 0 1 146.69 50.27 L 139.36 60.49 A 61.5 61.5 0 0 0 59.55 58.00 Z" fill="#FFFFFF"/><path d="M 36.73 147.50 A 74.0 74.0 0 0 0 100.58 179.95 L 92.70 167.27 A 61.5 61.5 0 0 1 52.61 147.50 Z" fill="#FFFFFF"/><path d="M 46.2 65.5 L 113.5 65.5 L 65.5 123.0 L 83.5 123.0 L 94.0 140.0 L 28.5 140.0 L 76.5 82.5 L 32.0 82.5 Z" fill="#FFFFFF"/><path d="M 108.61 179.24 A 74.0 74.0 0 0 0 166.52 78.04 L 157.83 91.75 A 61.5 61.5 0 0 1 101.27 167.41 Z" fill="#00E676"/><path d="M 81.5 105.0 L 97.5 85.8 L 113.0 111.0 L 153.5 54.5 L 143.0 48.0 L 185.0 31.0 L 175.0 73.5 L 166.5 65.0 L 111.0 152.5 Z" fill="#00E676"/></svg><span style="display:flex;flex-direction:column;justify-content:center;line-height:1;"><span style="font-family:'Inter','Space Grotesk',-apple-system,BlinkMacSystemFont,sans-serif;font-size:18px;font-weight:900;letter-spacing:-0.035em;line-height:1;"><span style="color:#FFFFFF;">Zero</span><span style="color:#00E676;">Vig</span><sup style="font-size:6.5px;font-weight:700;color:#8A93A2;margin-left:1px;top:-6px;position:relative;letter-spacing:0;">TM</sup></span><span style="font-family:'Space Grotesk','Inter',-apple-system,sans-serif;font-size:5.8px;font-weight:700;letter-spacing:0.075em;margin-top:2px;white-space:nowrap;"><span style="color:#D5D9E0;">SEE THE ODDS. </span><span style="color:#00E676;">FIND THE EDGE.</span></span></span></span></div>
       <div class="header-right">
         <div class="book-dropdown" id="bookDropdownBtn" onclick="toggleBookPopover(event)">
           <img id="activeBookLogo" src="" style="width:16px;height:16px;border-radius:4px;object-fit:cover;border:0.5px solid rgba(255,255,255,0.2);">
@@ -3213,7 +3221,7 @@
 
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/service-worker.js?v=6").catch(() => {});
+        navigator.serviceWorker.register("/service-worker.js?v=7").catch(() => {});
       });
     }
 
