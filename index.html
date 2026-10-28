@@ -2984,7 +2984,7 @@ let state = {
   expandedCardAlts: {},
   expandedPlayers: {},
   altTargetPropId: "",
-  autoTargetMult: 5,
+  autoTargetMult: 3,
   stake: 20,
   allowPreLineup: false,
   slip: []
@@ -4859,8 +4859,11 @@ function renderAutoBuildView() {
   if (!container) return;
 
   const bookPool = getBookOfferPool(state.book);
-  const cleanConfirmed = bookPool.filter(p => !p.isTrap && p.lineupConfirmed && p.isAppPick).sort((a, b) => (b.edge || 0) - (a.edge || 0));
-  const pool = cleanConfirmed.length >= 5 ? cleanConfirmed : bookPool.filter(p => !p.isTrap && p.lineupConfirmed).sort((a, b) => (b.edge || 0) - (a.edge || 0));
+  // Sort by highest calibrated Win Probability (bestProb) first, then edge, filtering out >1.03x high-variance legs for Anchor slips
+  const probSort = (a, b) => ((b.bestProb || 0) - (a.bestProb || 0)) || ((b.edge || 0) - (a.edge || 0));
+  const cleanConfirmed = bookPool.filter(p => !p.isTrap && p.lineupConfirmed && p.isAppPick && (p.mult || 1.0) <= 1.03).sort(probSort);
+  const fallbackPool = bookPool.filter(p => !p.isTrap && (p.mult || 1.0) <= 1.03 && p.isAppPick).sort(probSort);
+  const pool = cleanConfirmed.length >= 5 ? cleanConfirmed : (fallbackPool.length >= 5 ? fallbackPool : bookPool.filter(p => !p.isTrap).sort(probSort));
 
   const distinctTeamProps = [];
   const seenTeams = new Set();
