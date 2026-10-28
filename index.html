@@ -6610,31 +6610,86 @@ function renderFloatingCapsule() {
 
   const bookMeta = BOOKS_META[state.book] || BOOKS_META.underdog;
   const stake = state.stake || 20;
+  const bookPool = getBookOfferPool(state.book);
+  const confirmedPool = bookPool.filter(p => p.lineupConfirmed && !p.isTrap);
+  const previewPool = (confirmedPool.length >= 2 ? confirmedPool : bookPool).slice(0, 3);
+
+  const renderAvatarStack = (propsArr, isGhost, shadedSet) => {
+    if (!propsArr || propsArr.length === 0) return "";
+    let avs = `<div class="zv-pd-avatars">`;
+    propsArr.slice(0, 5).forEach(p => {
+      if (!p) return;
+      const fb = window.getAvatarFallback(p.name);
+      const src = p.avatar || fb;
+      const cls = isGhost ? "zv-pd-av ghost-av" : (shadedSet && shadedSet.has(p.id) ? "zv-pd-av trap-av" : "zv-pd-av");
+      avs += `<img class="${cls}" src="${src}" alt="${p.name}" onerror="this.onerror=null;this.src=window.getAvatarFallback('${p.name.replace(/'/g, "'")}');">`;
+    });
+    avs += `</div>`;
+    return avs;
+  };
 
   if (state.activeTab === "autobuild") {
-    mount.innerHTML = "";
+    const confirmedCount = bookPool.filter(p => p.lineupConfirmed).length;
+    const isLocked = confirmedCount < 2 && !state.autoBuildRiskUnlocked;
+    if (isLocked) {
+      mount.innerHTML = `
+        <div class="zv-picks-dock" onclick="unlockAutoBuildAtOwnRisk()" style="border-color:rgba(245,158,11,0.5);">
+          <div class="zv-pd-left">
+            ${renderAvatarStack(previewPool, true, null)}
+            <div class="zv-pd-info">
+              <div class="zv-pd-top"><span style="color:#F59E0B;">LINEUP SHIELD</span> · ${confirmedCount} Confirmed</div>
+              <div class="zv-pd-sub">Official starters required before Auto-Build unlocks</div>
+            </div>
+          </div>
+          <button class="zv-pd-cta" style="background:#F59E0B;color:#07080B;">Unlock →</button>
+        </div>
+      `;
+      return;
+    }
+    if (state.autoBuildStage !== "revealed") {
+      mount.innerHTML = `
+        <div class="zv-picks-dock" onclick="startLiveTicketGenerator()">
+          <div class="zv-pd-left">
+            ${renderAvatarStack(previewPool, false, null)}
+            <div class="zv-pd-info">
+              <div class="zv-pd-top"><span style="color:#00E676;">AUTO-BUILD READY</span> · ${confirmedCount} Confirmed</div>
+              <div class="zv-pd-sub">Build highest-win-% ${bookMeta.name} slip from top anchors</div>
+            </div>
+          </div>
+          <button class="zv-pd-cta">Build Slip →</button>
+        </div>
+      `;
+      return;
+    }
+    const mult = state.autoTargetMult === 3 ? 3.0 : state.autoTargetMult === 5 ? 6.0 : 10.0;
+    const payout = Math.round(stake * mult);
+    mount.innerHTML = `
+      <div class="zv-picks-dock" onclick="triggerAutoBuildPrimaryLoad()">
+        <div class="zv-pd-left">
+          ${renderAvatarStack(previewPool, false, null)}
+          <div class="zv-pd-info">
+            <div class="zv-pd-top"><span style="color:#00E676;">95 · A+ TICKET</span> · $${stake} → $${payout}</div>
+            <div class="zv-pd-sub">Tap to load legs into Slip X-Ray</div>
+          </div>
+        </div>
+        <button class="zv-pd-cta">X-Ray Slip →</button>
+      </div>
+    `;
     return;
   }
 
   if (state.slip.length === 0) {
-    const topPool = getActiveBoardPool().slice(0, 2);
-    const previewAvs = topPool.map(p => {
-      const fb = window.getAvatarFallback(p.name);
-      return `<div class="zv-dock-av" style="border-color:rgba(255,255,255,0.28);opacity:0.82;"><img src="${p.avatar || fb}" alt="${p.name}" onerror="this.onerror=null;this.src=window.getAvatarFallback('${p.name.replace(/'/g, "\'")}');"></div>`;
-    }).join("");
+    const topNames = previewPool.slice(0, 2).map(p => p.name.split(" ").pop()).join(", ");
     mount.innerHTML = `
-      <div class="zv-picks-dock empty-dock" onclick="switchTab('autobuild')">
-        <div class="zv-dock-left">
-          <div class="zv-dock-avatars">
-            ${previewAvs}
-            <div class="zv-dock-ghost">+</div>
-          </div>
-          <div class="zv-dock-meta">
-            <div class="zv-dock-top-line">Build Your ${bookMeta.name} Slip</div>
-            <div class="zv-dock-sub-line">Tap O/U on 2–6 players or 1-tap Auto-Build</div>
+      <div class="zv-picks-dock" onclick="switchTab('autobuild')">
+        <div class="zv-pd-left">
+          ${renderAvatarStack(previewPool, true, null)}
+          <div class="zv-pd-info">
+            <div class="zv-pd-top"><span style="color:#00E676;">MY SLIP (0 PICKS)</span> · ${bookMeta.name}</div>
+            <div class="zv-pd-sub">Tap Over/Under on any player (${topNames || '2–6 legs'}) or Auto-Build</div>
           </div>
         </div>
-        <button class="zv-dock-cta">Auto-Build →</button>
+        <button class="zv-pd-cta">Auto-Build →</button>
       </div>
     `;
     return;
@@ -6644,45 +6699,35 @@ function renderFloatingCapsule() {
   const metrics = computeSlipMetrics(legs);
   const payoutDollar = Math.round(stake * metrics.payoutMult);
   const winChancePct = Math.round(metrics.cashProb * 100);
-
-  const avatarsHtml = legs.slice(0, 5).map(l => {
-    const p = l.prop;
-    const fb = window.getAvatarFallback(p.name);
-    const avCls = l.isShaded ? "zv-dock-av trap-av" : "zv-dock-av";
-    return `<div class="${avCls}" title="${p.name}"><img src="${p.avatar || fb}" alt="${p.name}" onerror="this.onerror=null;this.src=window.getAvatarFallback('${p.name.replace(/'/g, "\'")}');"></div>`;
-  }).join("");
-
-  const namesSummary = legs.map(l => l.prop.name.split(" ").pop()).join(", ");
+  const legProps = legs.map(l => l.prop);
+  const shadedSet = new Set(metrics.shadedLegs.map(s => s.prop.id));
+  const playerNamesSummary = legs.map(l => `${l.prop.name.split(" ").pop()} ${l.item.side === 'under' ? 'U' : 'O'}${l.line}`).join(" · ");
 
   if (state.activeTab === "audit") {
     if (metrics.hasTrap) {
       mount.innerHTML = `
         <div class="zv-picks-dock has-trap" onclick="applyOneTapUpgrade()">
-          <div class="zv-dock-left">
-            <div class="zv-dock-avatars">${avatarsHtml}</div>
-            <div class="zv-dock-meta">
-              <div class="zv-dock-top-line">
-                <span style="color:#FF4D4D;">${metrics.shadedLegs.length} Trap${metrics.shadedLegs.length > 1 ? "s" : ""} Found</span> · $${stake} → $${payoutDollar}
-              </div>
-              <div class="zv-dock-sub-line">${namesSummary} · Tap to auto-swap trap</div>
+          <div class="zv-pd-left">
+            ${renderAvatarStack(legProps, false, shadedSet)}
+            <div class="zv-pd-info">
+              <div class="zv-pd-top"><span style="color:#FF4D4D;">${metrics.shadedLegs.length} TRAP${metrics.shadedLegs.length > 1 ? 'S' : ''} FOUND</span> · $${stake} → $${payoutDollar}</div>
+              <div class="zv-pd-sub">${playerNamesSummary}</div>
             </div>
           </div>
-          <button class="zv-dock-cta">Fix Trap ↻</button>
+          <button class="zv-pd-cta" style="background:#FFFFFF;color:#05070B;">Swap Trap →</button>
         </div>
       `;
     } else {
       mount.innerHTML = `
         <div class="zv-picks-dock" onclick="openInSportsbook()">
-          <div class="zv-dock-left">
-            <div class="zv-dock-avatars">${avatarsHtml}</div>
-            <div class="zv-dock-meta">
-              <div class="zv-dock-top-line">
-                <span style="color:#00E676;">${metrics.letterGrade} (${winChancePct}% Win)</span> · $${stake} → $${payoutDollar}
-              </div>
-              <div class="zv-dock-sub-line">${namesSummary} · Ready for ${bookMeta.name}</div>
+          <div class="zv-pd-left">
+            ${renderAvatarStack(legProps, false, shadedSet)}
+            <div class="zv-pd-info">
+              <div class="zv-pd-top"><span style="color:#00E676;">${winChancePct}% WIN CHANCE</span> · $${stake} → $${payoutDollar}</div>
+              <div class="zv-pd-sub">${playerNamesSummary}</div>
             </div>
           </div>
-          <button class="zv-dock-cta">Open ${bookMeta.abbr} ↗</button>
+          <button class="zv-pd-cta">Lock on ${bookMeta.abbr} ↗</button>
         </div>
       `;
     }
@@ -6690,18 +6735,18 @@ function renderFloatingCapsule() {
   }
 
   mount.innerHTML = `
-    <div class="zv-picks-dock ${metrics.hasTrap ? "has-trap" : ""}" onclick="switchTab('audit')">
-      <div class="zv-dock-left">
-        <div class="zv-dock-avatars">${avatarsHtml}</div>
-        <div class="zv-dock-meta">
-          <div class="zv-dock-top-line">
-            <span>${legs.length} Pick${legs.length > 1 ? "s" : ""}</span>
-            <span style="color:#00E676;">$${stake} → $${payoutDollar} (${metrics.payoutMult}x)</span>
+    <div class="zv-picks-dock ${metrics.hasTrap ? 'has-trap' : ''}" onclick="switchTab('audit')">
+      <div class="zv-pd-left">
+        ${renderAvatarStack(legProps, false, shadedSet)}
+        <div class="zv-pd-info">
+          <div class="zv-pd-top">
+            <span style="color:${metrics.hasTrap ? '#FF4D4D' : '#00E676'};">${legs.length} PICK${legs.length > 1 ? 'S' : ''} · ${winChancePct}% WIN</span>
+            <span>· $${stake} → $${payoutDollar}</span>
           </div>
-          <div class="zv-dock-sub-line">${namesSummary} · ${metrics.hasTrap ? `<span style="color:#FF4D4D;font-weight:800;">${metrics.shadedLegs.length} Trap Alert</span>` : `<span style="color:#00E676;font-weight:800;">${winChancePct}% Win Chance</span>`}</div>
+          <div class="zv-pd-sub">${playerNamesSummary}</div>
         </div>
       </div>
-      <button class="zv-dock-cta">X-Ray Slip →</button>
+      <button class="zv-pd-cta">X-Ray Slip →</button>
     </div>
   `;
 }
@@ -6946,20 +6991,40 @@ function renderAuditView() {
   const stake = state.stake || 20;
 
   if (state.slip.length === 0) {
+    const bookPool = getBookOfferPool(state.book);
+    const topConfirmed = bookPool.filter(p => p.lineupConfirmed && !p.isTrap).slice(0, 2);
+    let quickPicksHtml = "";
+    if (topConfirmed.length >= 2) {
+      quickPicksHtml = `
+        <div style="width:100%;background:#0E121B;border:1px solid rgba(0,230,118,0.28);border-radius:12px;padding:11px 12px;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;" onclick="loadQuickConfirmed2Pick()">
+          <div style="display:flex;align-items:center;gap:9px;min-width:0;">
+            <div class="zv-pd-avatars">
+              ${topConfirmed.map(p => `<img class="zv-pd-av" src="${p.avatar || window.getAvatarFallback(p.name)}" alt="${p.name}" onerror="this.onerror=null;this.src=window.getAvatarFallback('${p.name.replace(/'/g, "'")}');">`).join("")}
+            </div>
+            <div style="min-width:0;">
+              <div style="font-size:11.5px;font-weight:900;color:#00E676;text-transform:uppercase;">1-Tap Top Confirmed 2-Pick</div>
+              <div style="font-size:11px;color:#D5D9E0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${topConfirmed.map(p => p.name.split(' ').pop()).join(' + ')} · Confirmed Lineups</div>
+            </div>
+          </div>
+          <button class="fix-cta" style="flex-shrink:0;">Load 2-Pick →</button>
+        </div>
+      `;
+    }
     container.innerHTML = `
       <div class="xray-view-wrap" style="gap:12px;">
         <div class="zv-subpage-bar">
-          <span class="zv-subpage-title">SLIP X-RAY™</span>
+          <span class="zv-subpage-title">SLIP X-RAY</span>
           <button class="scan-slip-btn" style="padding:5px 10px;font-size:10.5px;font-weight:900;text-transform:uppercase;" onclick="openSlipImportModal()">IMPORT SLIP</button>
         </div>
-        <div style="background:#0B0E15;border:1.5px solid rgba(255,255,255,0.12);border-radius:16px;padding:26px 18px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;">
-          <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:900;color:#FFFFFF;text-transform:uppercase;">NO PICKS IN YOUR SLIP YET</div>
-          <div style="font-size:12px;color:#9BA3B2;max-width:280px;line-height:1.45;">
-            Tap Over or Under on any player on the <strong>Board</strong>, or let <strong>Auto-Build</strong> lock your highest-probability ticket.
+        <div style="background:#0B0E15;border:1.5px solid rgba(255,255,255,0.12);border-radius:14px;padding:20px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;">
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:900;color:#FFFFFF;text-transform:uppercase;">ADD 2–6 PICKS TO X-RAY YOUR SLIP</div>
+          <div style="font-size:12px;color:#9BA3B2;max-width:300px;line-height:1.45;">
+            See your real <strong>Win Chance %</strong>, spot inflated book lines, and swap any weak leg in 1 tap.
           </div>
-          <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:4px;">
-            <button class="primary-btn" style="padding:0 14px;height:38px;" onclick="switchTab('board')">BROWSE BOARD</button>
-            <button class="primary-btn" style="padding:0 14px;height:38px;background:#00E676;color:#05120A;" onclick="switchTab('autobuild')">AUTO-BUILD SLIP</button>
+          ${quickPicksHtml}
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;">
+            <button class="primary-btn" style="height:40px;font-weight:900;" onclick="switchTab('board')">PICK FROM BOARD</button>
+            <button class="primary-btn" style="height:40px;background:#00E676;color:#05120A;font-weight:900;" onclick="switchTab('autobuild')">AUTO-BUILD SLIP</button>
           </div>
         </div>
       </div>
@@ -6971,133 +7036,160 @@ function renderAuditView() {
   const metrics = computeSlipMetrics(legs);
   const payoutDollar = Math.round(stake * metrics.payoutMult);
   const winChancePct = Math.round(metrics.cashProb * 100);
+  const sweepPct = Math.round(metrics.sweepProb * 100);
+  const flexCashPct = Math.round(metrics.flexCashProb * 100);
 
-  let verdictLine = `<span style="color:#00E676;">✓ All ${legs.length} Picks Pass True-Line Audit</span> · ${winChancePct}% Ticket Win Chance`;
-  if (metrics.hasTrap) {
-    verdictLine = `<span style="color:#FF4D4D;">⚠ ${metrics.shadedLegs.length} Bad Book Line${metrics.shadedLegs.length > 1 ? "s" : ""} Found</span> · ${winChancePct}% Current Win Chance`;
-  } else if (metrics.dragLegs.length > 0) {
-    verdictLine = `<span style="color:#FFB340;">${metrics.dragLegs.length} Coin-Flip Leg${metrics.dragLegs.length > 1 ? "s" : ""} Lowering Odds</span> · ${winChancePct}% Win Chance`;
-  }
+  let html = `<div class="xray-view-wrap" style="gap:10px;">`;
 
-  let html = `<div class="xray-view-wrap" style="gap:12px;">`;
-
-  // 1. Clean Top Header Bar
+  // Clean Top Header Row
   html += `
     <div class="zv-subpage-bar">
-      <span class="zv-subpage-title">SLIP X-RAY™</span>
+      <span class="zv-subpage-title">SLIP X-RAY · ${legs.length} PICKS</span>
       <div style="display:flex;align-items:center;gap:6px;">
         <button class="scan-slip-btn" style="padding:4px 9px;font-size:10px;font-weight:900;text-transform:uppercase;" onclick="openSlipImportModal()">IMPORT</button>
-        <button class="scan-slip-btn" style="padding:4px 9px;font-size:10px;font-weight:900;color:#9BA3B2;text-transform:uppercase;" onclick="clearSlip(event)">✕ CLEAR</button>
+        <button class="scan-slip-btn" style="padding:4px 9px;font-size:10px;font-weight:900;color:#9BA3B2;text-transform:uppercase;" onclick="clearSlip(event)">CLEAR</button>
       </div>
     </div>
   `;
 
-  // 2. Single Clean Verdict & Payout Hero Card (with Stake Pills built right in)
+  // 1. Single At-a-Glance Verdict Card (Payout + Win % + Grade + Stake/Flex Switcher)
+  const verdictLine = metrics.hasTrap
+    ? `<span style="color:#FF4D4D;font-weight:800;">⚠️ ${metrics.shadedLegs.length} Bad Line Found — Tap Swap Below</span>`
+    : (metrics.dragLegs.length > 0
+      ? `<span style="color:#FFB340;font-weight:800;">⚡ ${metrics.dragLegs.length} Coin-Flip Leg — Upgrade Below to Boost Win %</span>`
+      : `<span style="color:#00E676;font-weight:800;">✓ All ${legs.length} Picks Verified Clean on ${bookMeta.name}</span>`);
+
   html += `
-    <div class="xray-clean-hero" data-pro-slip-auditor="true">
-      <div class="xray-hero-top">
+    <div class="zv-xray-summary ${metrics.hasTrap ? 'trap-summary' : ''}" id="proSlipAuditorCard" data-pro-slip-auditor="true">
+      <div class="zv-xs-main">
         <div>
-          <div style="font-size:10px;font-weight:900;color:#9BA3B2;letter-spacing:0.06em;text-transform:uppercase;">
-            ${legs.length}-PICK ${bookMeta.name.toUpperCase()} TICKET (${metrics.payoutMult}x)
+          <div style="font-size:10px;font-weight:900;color:#9BA3B2;letter-spacing:0.06em;text-transform:uppercase;">${bookMeta.name} ${metrics.playType === 'flex' ? 'Flex' : 'Power'} Payout</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:900;color:#FFFFFF;line-height:1.1;margin-top:2px;">
+            $${stake} <span style="color:#8A94A6;font-weight:700;">→</span> <span style="color:#00E676;">$${payoutDollar.toLocaleString()}</span>
           </div>
-          <div class="xray-payout-big">$${stake} → <span>$${payoutDollar.toLocaleString()}</span></div>
-          <div class="xray-verdict-sub">${verdictLine}</div>
+          <div style="font-size:11.5px;margin-top:4px;">${verdictLine}</div>
         </div>
-        <div class="grade-pill ${metrics.hasTrap ? "" : "good"}" style="flex-shrink:0;">
-          <div class="gp-num">${metrics.letterGrade}</div>
+        <div class="grade-pill ${metrics.hasTrap ? '' : 'good'}" style="min-width:68px;padding:7px 10px;">
+          <div class="gp-num" style="font-size:20px;">${metrics.letterGrade}</div>
           <div class="gp-lbl">${winChancePct}% WIN</div>
         </div>
       </div>
 
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.08);">
-        <span style="font-size:10.5px;font-weight:800;color:#9BA3B2;text-transform:uppercase;letter-spacing:0.04em;">Entry Stake</span>
-        <div class="stake-pills">
-          ${[10, 20, 50, 100].map(s => `<button class="stake-chip ${stake === s ? "on" : ""}" onclick="setSlipStake(${s})">$${s}</button>`).join("")}
+      <div class="zv-xs-metrics">
+        <div class="zv-xs-stat">
+          <div class="zv-xs-lbl">Win Chance</div>
+          <div class="zv-xs-val" style="color:${winChancePct >= 38 ? '#00E676' : '#FFB340'};">${winChancePct}%</div>
         </div>
+        <div class="zv-xs-stat">
+          <div class="zv-xs-lbl">Multiplier</div>
+          <div class="zv-xs-val">${metrics.payoutMult}x</div>
+        </div>
+        <div class="zv-xs-stat">
+          <div class="zv-xs-lbl">Slip Score</div>
+          <div class="zv-xs-val" style="color:${metrics.hasTrap ? '#FF4D4D' : '#00E676'};">${metrics.truthScore}/100</div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:4px;">
+        <div class="stake-pills">
+          ${[10, 20, 50, 100].map(s => `<button class="stake-chip ${stake === s ? 'on' : ''}" onclick="setSlipStake(${s})">$${s}</button>`).join("")}
+        </div>
+        ${legs.length >= 3 ? `
+          <div class="stake-pills">
+            <button class="stake-chip ${metrics.playType === 'power' ? 'on' : ''}" onclick="setSlipPlayType('power')">Power (${sweepPct}%)</button>
+            <button class="stake-chip ${metrics.playType === 'flex' ? 'on' : ''}" onclick="setSlipPlayType('flex')">Flex (${flexCashPct}%)</button>
+          </div>
+        ` : ""}
       </div>
     </div>
   `;
 
-  // 3. Clean Leg-by-Leg Cards (1 Card Per Pick — Zero Wall of Text)
+  // 2. Simple, Scannable Player Leg Cards (One card per pick: Headshot + Pick + Clear Verdict + 1-Tap Swap if needed)
   const usedSwapExclude = [];
   legs.forEach(leg => {
     const p = leg.prop;
     const bk = getBookData(p);
     const trueVal = getTrueLine(p, bk);
+    const probPct = Math.round(leg.prob * 100);
     const fb = window.getAvatarFallback(p.name);
-    const legProbPct = Math.round(leg.prob * 100);
-    const sideWord = leg.item.side === "under" ? "UNDER" : "OVER";
+    const isTrap = leg.isShaded;
+    const isWeak = !isTrap && leg.isDrag;
 
-    if (leg.isShaded) {
-      const diff = Math.max(0.5, Math.abs(+(bk.line - trueVal).toFixed(1))).toFixed(1);
+    let statusPill = `<span class="zv-badge good">✓ ${probPct}% WIN</span>`;
+    let comparisonText = `${bookMeta.name} <strong>${leg.line}</strong> vs True Line <strong style="color:#00E676;">${trueVal}</strong>`;
+    let swapBarHtml = "";
+
+    if (isTrap || isWeak) {
+      statusPill = isTrap
+        ? `<span class="zv-badge bad">${probPct}% · BAD LINE</span>`
+        : `<span class="zv-badge" style="background:rgba(255,179,64,0.16);color:#FFB340;border:1px solid rgba(255,179,64,0.4);">${probPct}% · WEAK LEG</span>`;
+
       const swapProp = getBestSwapProp(leg, usedSwapExclude);
-      if (swapProp) usedSwapExclude.push(swapProp.id);
-      const swapBk = getBookData(swapProp);
-      const swapSide = swapProp.recSide || "over";
-      const swapProbPct = Math.round(((swapSide === "under") ? getPropUnderProb(swapProp) : getPropOverProb(swapProp)) * 100);
+      if (swapProp) {
+        usedSwapExclude.push(swapProp.id);
+        const swBk = getBookData(swapProp);
+        const swSide = swapProp.recSide || "over";
+        const swProb = Math.round(((swSide === "under") ? getPropUnderProb(swapProp) : getPropOverProb(swapProp)) * 100);
+        const clickHandler = isTrap
+          ? `selectLegRemediation('${p.id}', 'swap', 0)`
+          : `upgradeSingleDragLeg('${p.id}')`;
 
-      html += `
-        <div class="xray-leg-card is-trap" data-shaded-id="${p.id}">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
-            <div style="display:flex;align-items:center;gap:10px;min-width:0;">
-              <div class="p-av" style="width:42px;height:42px;"><img src="${p.avatar || fb}" alt="${p.name}" onerror="this.onerror=null;this.src=window.getAvatarFallback('${p.name.replace(/'/g, "\'")}');"></div>
-              <div style="min-width:0;">
-                <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-                  <span style="font-size:14px;font-weight:900;color:#FFFFFF;">${p.name}</span>
-                  ${window.renderTeamBadge(p.sport, p.team)}
-                </div>
-                <div style="font-size:12px;font-weight:800;color:#FF4D4D;margin-top:2px;">
-                  ${sideWord} ${leg.line} ${p.stat} · True Line is ${trueVal} (${diff} pt trap)
-                </div>
-              </div>
-            </div>
-            <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-              <span class="zv-badge bad">${legProbPct}% TRAP</span>
-              <button onclick="removeSlipLeg('${p.id}')" style="background:#171C28;border:1px solid rgba(255,255,255,0.12);color:#9BA3B2;width:26px;height:26px;border-radius:7px;font-size:11px;font-weight:900;cursor:pointer;" title="Remove pick">✕</button>
-            </div>
-          </div>
-
-          <div class="fix-box" onclick="selectLegRemediation('${p.id}', 'swap', 0)" style="margin-top:2px;">
+        swapBarHtml = `
+          <div class="fix-box" style="margin-top:2px;" onclick="${clickHandler}">
             <div class="fix-txt" style="display:flex;align-items:center;gap:8px;">
               ${window.renderPlayerAvatarImg(swapProp, 28)}
               <div>
-                <div style="font-size:11.5px;font-weight:900;color:#FFFFFF;">Swap to ${swapProp.name} ${window.renderTeamBadge(swapProp.sport, swapProp.team)}</div>
-                <div style="font-size:11px;color:#00E676;font-weight:800;">${swapSide === "under" ? "UNDER" : "OVER"} ${swapBk.line} ${swapProp.stat} (${swapProbPct}% Win Chance)</div>
+                <div style="font-size:11px;font-weight:900;color:#FFFFFF;">Swap to ${swapProp.name} (${swProb}% Win)</div>
+                <div style="font-size:10.5px;color:#00E676;font-weight:800;">${swSide === 'under' ? 'UNDER' : 'OVER'} ${swBk.line} ${swapProp.stat}</div>
               </div>
             </div>
             <button class="fix-cta">1-Tap Swap ↻</button>
           </div>
-        </div>
-      `;
-    } else {
-      const cushion = Math.max(0.5, Math.abs(leg.item.side === "under" ? +(leg.line - trueVal).toFixed(1) : +(trueVal - leg.line).toFixed(1))).toFixed(1);
-      html += `
-        <div class="xray-leg-card is-good">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
-            <div style="display:flex;align-items:center;gap:10px;min-width:0;">
-              <div class="p-av" style="width:42px;height:42px;"><img src="${p.avatar || fb}" alt="${p.name}" onerror="this.onerror=null;this.src=window.getAvatarFallback('${p.name.replace(/'/g, "\'")}');"></div>
-              <div style="min-width:0;">
-                <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-                  <span style="font-size:14px;font-weight:900;color:#FFFFFF;">${p.name}</span>
-                  ${window.renderTeamBadge(p.sport, p.team)}
-                </div>
-                <div style="font-size:12px;font-weight:800;color:#00E676;margin-top:2px;">
-                  ${sideWord} ${leg.line} ${p.stat} · True ${trueVal} (+${cushion} Cushion)
-                </div>
+        `;
+      }
+    }
+
+    html += `
+      <div class="zv-xray-leg ${isTrap ? 'bad-leg' : ''}" ${isTrap ? `data-shaded-id="${p.id}"` : ''}>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+          <div style="display:flex;align-items:center;gap:10px;min-width:0;">
+            <div class="p-av" style="width:40px;height:40px;">
+              <img src="${p.avatar || fb}" alt="${p.name}" onerror="this.onerror=null;this.src=window.getAvatarFallback('${p.name.replace(/'/g, "'")}');">
+            </div>
+            <div style="min-width:0;">
+              <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
+                <span style="font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:900;color:#FFFFFF;">${p.name}</span>
+                ${window.renderTeamBadge(p.sport, p.team)}
+              </div>
+              <div style="font-size:12px;font-weight:900;color:#00E676;margin-top:1px;">
+                ${leg.label}
+              </div>
+              <div style="font-size:10.5px;color:#9BA3B2;margin-top:1px;">
+                ${comparisonText}
               </div>
             </div>
-            <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-              <span class="zv-badge good">${legProbPct}% WIN</span>
-              <button onclick="removeSlipLeg('${p.id}')" style="background:#171C28;border:1px solid rgba(255,255,255,0.12);color:#9BA3B2;width:26px;height:26px;border-radius:7px;font-size:11px;font-weight:900;cursor:pointer;" title="Remove pick">✕</button>
-            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;">
+            ${statusPill}
+            <button onclick="removeSlipLeg('${p.id}')" style="background:transparent;border:none;color:#8A94A6;font-size:10px;font-weight:800;cursor:pointer;">Remove ✕</button>
           </div>
         </div>
-      `;
-    }
+        ${swapBarHtml}
+      </div>
+    `;
   });
 
   html += `</div>`;
   container.innerHTML = html;
+}
+
+function loadQuickConfirmed2Pick() {
+  const bookPool = getBookOfferPool(state.book);
+  const topConfirmed = bookPool.filter(p => p.lineupConfirmed && !p.isTrap).slice(0, 2);
+  if (topConfirmed.length < 2) return;
+  state.slip = topConfirmed.map(p => ({ id: p.id, side: p.recSide || "over", altIdx: null }));
+  renderAll();
+  showToast("Loaded Top Confirmed 2-Pick into Slip X-Ray");
 }
 
 function removeSlipLeg(propId) {
@@ -7732,7 +7824,7 @@ window.addEventListener("DOMContentLoaded", () => {
   fetchLiveFeed(false);
 
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./service-worker.js?v=22").catch(() => {});
+    navigator.serviceWorker.register("./service-worker.js?v=23").catch(() => {});
   }
 });
 </script>
