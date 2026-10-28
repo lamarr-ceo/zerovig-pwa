@@ -3674,6 +3674,86 @@
     top: auto !important;
     bottom: 112px !important;
   }
+  /* 1-Tap Horizontal Book Switcher Strip Below Solo ZEROVIG Header */
+  .zv-book-switcher-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 6px 12px;
+    background: #080A0F;
+    border-bottom: 1px solid #181E2B;
+  }
+  .zv-book-pills-scroll {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    flex: 1;
+    min-width: 0;
+  }
+  .zv-book-pills-scroll::-webkit-scrollbar {
+    display: none;
+  }
+  .zv-book-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5.5px;
+    height: 29px;
+    padding: 0 9.5px;
+    border-radius: 8px;
+    background: #10141E;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    color: #9BA3B2;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+  .zv-book-chip img {
+    width: 15px;
+    height: 15px;
+    border-radius: 3.5px;
+    object-fit: cover;
+  }
+  .zv-book-chip.active {
+    background: rgba(0, 230, 118, 0.14);
+    border-color: #00E676;
+    color: #FFFFFF;
+    box-shadow: 0 0 12px rgba(0, 230, 118, 0.16);
+  }
+  .zv-book-chip .zv-chip-dot {
+    width: 5.5px;
+    height: 5.5px;
+    border-radius: 50%;
+    background: #00E676;
+    box-shadow: 0 0 6px #00E676;
+  }
+  .zv-book-bar-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+  }
+  .zv-book-bar-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 29px;
+    padding: 0 8px;
+    border-radius: 8px;
+    background: #10141E;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #D5D9E0;
+    font-size: 10.5px;
+    font-weight: 800;
+    cursor: pointer;
+  }
   /* === END ZEROVIG v22 === */
   </style>
 </head>
@@ -3690,6 +3770,8 @@
         <span class="nm-zero">ZERO</span><span class="nm-vig">VIG</span>
       </div>
     </div>
+
+    <div class="zv-book-switcher-bar" id="topBookSwitcherBar"></div>
 
     <div class="search-drawer" id="searchDrawer">
       <input type="text" class="search-input" id="searchInput" placeholder="Search player, team, or stat (e.g. Luka, Jrue, Points, Shots)..." oninput="onSearchInput(this.value)" />
@@ -3788,14 +3870,6 @@
             <span id="liveFeedStatusText"><strong style="color:#00E676;">Live Odds</strong> · 20 Apps Synced</span>
           </div>
           <div style="display:inline-flex;align-items:center;gap:5px;flex-shrink:0;">
-            <div class="book-dropdown" id="bookDropdownBtn" onclick="openBookModal(event)" style="height:24px;padding:0 6px;">
-              <img id="activeBookLogo" src="" alt="Book" style="width:13px;height:13px;border-radius:3px;object-fit:cover;">
-              <span class="book-label" id="activeBookLabel" style="font-size:10px;">Underdog</span>
-              <span class="live-dot"></span>
-            </div>
-            <div class="icon-btn" onclick="openSettingsModal(event)" title="My Books & Settings" style="width:24px;height:24px;">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            </div>
             <button class="live-sync-pill" id="liveSyncBtn" onclick="fetchLiveFeed(true)">
               <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9"/><polyline points="13.5 1.8 13.5 4.8 10.5 4.8"/></svg>
             </button>
@@ -7210,7 +7284,43 @@ function showToast(msg) {
   }, 2600);
 }
 
+
+function renderTopBookBar() {
+  const bar = document.getElementById("topBookSwitcherBar");
+  if (!bar) return;
+  const enabledList = (state.enabledBooks && state.enabledBooks.length) ? state.enabledBooks : ["underdog", "prizepicks", "draftkings", "fanduel"];
+  const pillsHtml = enabledList.map(k => {
+    const m = BOOKS_META[k];
+    if (!m) return "";
+    const isActive = state.book === k;
+    const logoSrc = window.getBookLogo(k, m.abbr);
+    return `
+      <button class="zv-book-chip ${isActive ? "active" : ""}" onclick="selectBook('${k}')">
+        <img src="${logoSrc}" alt="${m.name}">
+        <span>${m.name}</span>
+        ${isActive ? '<span class="zv-chip-dot"></span>' : ""}
+      </button>
+    `;
+  }).join("");
+
+  bar.innerHTML = `
+    <div class="zv-book-pills-scroll">
+      ${pillsHtml}
+    </div>
+    <div class="zv-book-bar-actions">
+      <button class="zv-book-bar-btn" onclick="toggleSearch()" title="Search player or stat">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button class="zv-book-bar-btn" onclick="openSettingsModal(event)" title="Manage My Sportsbooks &amp; Settings">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Books</span>
+      </button>
+    </div>
+  `;
+}
+
 function renderAll() {
+  renderTopBookBar();
   renderFeedStrip();
   renderBoard();
   renderAuditView();
