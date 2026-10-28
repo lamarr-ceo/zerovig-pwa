@@ -5690,6 +5690,7 @@
     transition: left 0.48s cubic-bezier(0.22, 1, 0.36, 1), width 0.48s cubic-bezier(0.22, 1, 0.36, 1) !important;
   }
 
+  #bookSyncBanner, .zv-book-sync-banner, .zv-book-sync-hud { display: none !important; }
 </style>
 </head>
 <body>
@@ -5707,7 +5708,6 @@
     </div>
 
     <div class="zv-book-switcher-bar" id="topBookSwitcherBar"></div>
-    <div class="zv-book-sync-banner" id="bookSyncBanner"></div>
     <div class="zv-onboard-backdrop" id="zvOnboardBackdrop"></div>
 
 
@@ -7486,32 +7486,6 @@ function selectBook(bookKey) {
       document.body.classList.remove("zv-book-calibrating", "zv-book-switching");
     }, 45);
   });
-
-  // Trigger dopamine book-sync pulse banner
-  const bkPool = getBookOfferPool(bookKey);
-  const bkLines = bkPool.length;
-  const cleanCount = bkPool.filter(p => window.getBookSpecificPropMetrics ? window.getBookSpecificPropMetrics(p, bookKey).isBookPick : !p.isTrap).length;
-  const syncBanner = document.getElementById("bookSyncBanner");
-  if (syncBanner) {
-    const logoSrc = window.getBookLogo(bookKey, meta.abbr);
-    syncBanner.innerHTML = `
-      <div style="display:flex;align-items:center;gap:10px;">
-        <img src="${logoSrc}" alt="${meta.name}" style="width:24px;height:24px;border-radius:6px;box-shadow:0 0 10px rgba(0,230,118,0.4);">
-        <div>
-          <div style="font-family:var(--font-mono);font-size:10px;font-weight:800;color:#00E676;letter-spacing:0.06em;text-transform:uppercase;">⚡ ${meta.name} LIVE BOARD ACTIVE · ${bkLines.toLocaleString()} PROPS</div>
-          <div style="font-size:11px;color:#E2E8F0;font-weight:600;">Recalibrated lines, ${meta.abbr} pricing & cushions (${cleanCount} high-cushion edges)</div>
-        </div>
-      </div>
-      <div style="font-family:var(--font-mono);font-size:10px;font-weight:800;color:#00E676;background:rgba(0,230,118,0.12);border:1px solid rgba(0,230,118,0.35);padding:3px 8px;border-radius:999px;">LIVE</div>
-    `;
-    syncBanner.classList.add("active");
-    clearTimeout(window._bookSyncTimer);
-    window._bookSyncTimer = setTimeout(() => {
-      syncBanner.classList.remove("active");
-    }, 2600);
-  }
-
-  showToast(`Switched to ${meta.name} (${bkLines} live lines)`);
 }
 
 function switchTab(tabName) {
