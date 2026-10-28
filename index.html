@@ -6571,9 +6571,10 @@ window.getBookSpecificPropMetrics = function(p, bookKey, engOverride) {
   let oProb = (rawBk && typeof rawBk.probOver === "number" && eng === "pro") ? rawBk.probOver : baseO;
   let uProb = (rawBk && typeof rawBk.probUnder === "number" && eng === "pro") ? rawBk.probUnder : baseU;
 
+  if (bkLine <= 0.5 && udLine >= 1.5) bkLine = udLine;
   const lineDiff = bkLine - udLine;
   const scale = Math.max(1.2, Math.abs(p.trueLine || udLine || 10) * 0.22);
-  if (Math.abs(lineDiff) > 0.01 && !(rawBk && typeof rawBk.probOver === "number")) {
+  if (Math.abs(lineDiff) > 0.01) {
     const shift = Math.max(-0.16, Math.min(0.16, -(lineDiff / scale) * 0.14));
     oProb = Math.max(0.12, Math.min(0.88, baseO + shift));
     uProb = +(1.0 - oProb).toFixed(4);
@@ -6588,22 +6589,27 @@ window.getBookSpecificPropMetrics = function(p, bookKey, engOverride) {
   const bestProb = Math.max(oProb, uProb);
   const meta = (typeof BOOKS_META !== "undefined" && BOOKS_META[k]) ? BOOKS_META[k] : { abbr: k.toUpperCase().slice(0,3), isDfs: false };
 
-  let mult = (rawBk && typeof rawBk.mult === "number") ? rawBk.mult : (typeof p.mult === "number" ? p.mult : 1.0);
+  const rawUdMult = typeof p.mult === "number" ? p.mult : 1.0;
+  const isBinaryHeavyJuice = (rawUdMult < 0.88 || rawUdMult > 1.15 || bestProb > 0.69);
+  let mult = (rawBk && typeof rawBk.mult === "number") ? rawBk.mult : rawUdMult;
   if (k === "prizepicks" || k === "dabble" || k === "chalkboard") {
-    mult = 1.0;
+    mult = isBinaryHeavyJuice ? rawUdMult : 1.0;
   } else if (k === "sleeper" || k === "betr" || k === "parlayplay") {
-    mult = +(0.96 + ((absSeed % 17) * 0.01)).toFixed(2);
+    mult = isBinaryHeavyJuice ? rawUdMult : +(0.96 + ((absSeed % 12) * 0.008)).toFixed(2);
+  } else if (!meta || !meta.isDfs) {
+    mult = isBinaryHeavyJuice ? rawUdMult : 1.0;
   }
 
   let breakEven = 0.5238;
-  if (meta && meta.isDfs) {
-    breakEven = Math.max(0.46, Math.min(0.60, 0.542 / Math.max(0.85, mult)));
+  if (isBinaryHeavyJuice) {
+    breakEven = Math.max(0.56, bestProb - 0.008 + ((absSeed % 9) * 0.002));
+  } else if (meta && meta.isDfs) {
+    breakEven = Math.max(0.48, Math.min(0.58, 0.542 / Math.max(0.88, mult)));
   } else if (k === "pinnacle" || k === "prophetx" || k === "kalshi" || k === "polymarket") {
-    breakEven = 0.508;
+    breakEven = 0.508 + ((absSeed % 7) * 0.0012);
   } else {
-    // Sportsbooks: distinct book juice on each prop (-108 to -128)
-    const bookJuice = 0.515 + ((absSeed % 15) * 0.0016);
-    breakEven = bookJuice;
+    // Sportsbooks: distinct book juice on each prop (-108 to -126)
+    breakEven = 0.514 + ((absSeed % 15) * 0.0016);
   }
 
   const edge = +(bestProb - breakEven).toFixed(4);
