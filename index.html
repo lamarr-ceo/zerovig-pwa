@@ -8081,15 +8081,17 @@ function getBestSwapProp(shadedLeg, extraExcludeIds) {
   });
 
   if (candidates.length === 0) {
+    const reqConf = !state.autoBuildRiskUnlocked;
     candidates = bookPool.filter(p => {
       const recSide = p.recSide || "over";
       const bestP = (recSide === "under") ? getPropUnderProb(p) : getPropOverProb(p);
       return (
         !p.isTrap &&
+        (!reqConf || p.lineupConfirmed) &&
         ((p.mult || 1.0) >= 0.92 && (p.mult || 1.0) <= 1.03) &&
         !isWeakArchetypeProp(p, recSide) &&
         !slipIds.includes(p.id) &&
-        bestP >= 0.60
+        bestP >= 0.57
       );
     });
   }
@@ -9334,8 +9336,10 @@ function buildBestCorrelatedStackItems(pickCount, bookPool) {
     if (aP !== bP) return bP - aP;
     return ((b.bestProb || 0) - (a.bestProb || 0)) || ((b.edge || 0) - (a.edge || 0));
   };
-  const cleanPool = bookPool.filter(p => !p.isTrap && ((p.mult || 1.0) >= 0.92 && (p.mult || 1.0) <= 1.03) && !isWeakArchetypeProp(p, p.recSide) && (p.bestProb || 0) >= 60).sort(probSort);
-  const activePool = cleanPool.length >= pickCount ? cleanPool : bookPool.filter(p => !p.isTrap).sort(probSort);
+  const requireConfirmed = !state.autoBuildRiskUnlocked;
+  const baseEligible = bookPool.filter(p => !p.isTrap && (!requireConfirmed || p.lineupConfirmed));
+  const cleanPool = baseEligible.filter(p => ((p.mult || 1.0) >= 0.92 && (p.mult || 1.0) <= 1.03) && !isWeakArchetypeProp(p, p.recSide) && (p.bestProb || 0) >= 58).sort(probSort);
+  const activePool = cleanPool.length >= pickCount ? cleanPool : baseEligible.sort(probSort);
 
   // Group props by game to find the strongest Same-Game Under Script or Opposing-Team Correlated Stack
   const byGame = {};
@@ -9698,7 +9702,8 @@ function startLiveTicketGenerator() {
     autoBuildScanTimer = null;
   }
   const bookPool = getBookOfferPool(state.book);
-  const sampleProps = bookPool.slice(0, 24);
+  const confirmedPool = bookPool.filter(p => p.lineupConfirmed && !p.isTrap);
+  const sampleProps = (!state.autoBuildRiskUnlocked && confirmedPool.length > 0) ? confirmedPool.slice(0, 24) : bookPool.slice(0, 24);
   state.autoBuildStage = "scanning";
   state.autoBuildScanPct = 8;
   state.autoBuildScanStep = 1;
@@ -9912,10 +9917,13 @@ function renderAutoBuildView() {
     return ((b.bestProb || 0) - (a.bestProb || 0)) || ((b.edge || 0) - (a.edge || 0));
   };
 
-  const cleanConfirmed = bookPool.filter(p => !p.isTrap && p.lineupConfirmed && ((p.mult || 1.0) >= 0.92 && (p.mult || 1.0) <= 1.03) && !isWeakArchetypeProp(p, p.recSide)).sort(anchorSort);
+  const allConfirmedClean = bookPool.filter(p => !p.isTrap && p.lineupConfirmed).sort(anchorSort);
+  const strictConfirmed = allConfirmedClean.filter(p => ((p.mult || 1.0) >= 0.92 && (p.mult || 1.0) <= 1.03) && !isWeakArchetypeProp(p, p.recSide)).sort(anchorSort);
+  const cleanConfirmed = strictConfirmed.length >= requiredLegs ? strictConfirmed : allConfirmedClean;
+  const distinctConfirmedPlayers = new Set(cleanConfirmed.map(p => p.fullName || p.name));
 
   // STATE 1: STRICT LINEUP LOCK SCREEN (When official starting lineups are NOT confirmed & user has not overridden)
-  if (cleanConfirmed.length < requiredLegs && !state.autoBuildRiskUnlocked) {
+  if (distinctConfirmedPlayers.size < requiredLegs && !state.autoBuildRiskUnlocked) {
     currentAutoBuildItems = [];
     container.innerHTML = `
       <div class="autobuild-wrap">
@@ -9945,32 +9953,49 @@ function renderAutoBuildView() {
     return;
   }
 
-  // Pool selection once unlocked (either via Confirmed Starters OR explicit "Proceed at My Own Risk")
-  const fallbackPool = bookPool.filter(p => !p.isTrap && ((p.mult || 1.0) >= 0.92 && (p.mult || 1.0) <= 1.03) && !isWeakArchetypeProp(p, p.recSide) && (p.bestProb || 0) >= 60).sort(anchorSort);
-  const pool = cleanConfirmed.length >= requiredLegs ? cleanConfirmed : (fallbackPool.length >= requiredLegs ? fallbackPool : bookPool.filter(p => !p.isTrap).sort(anchorSort));
+  // Pool selection once unlocked (STRICTLY confirmed starters unless user explicitly clicked "Proceed at My Own Risk")
+  const requireConfirmed = !state.autoBuildRiskUnlocked;
+  const unconfirmedFallbackPool = bookPool.filter(p => !p.isTrap && (!requireConfirmed || p.lineupConfirmed) && ((p.mult || 1.0) >= 0.92 && (p.mult || 1.0) <= 1.03) && !isWeakArchetypeProp(p, p.recSide) && (p.bestProb || 0) >= 58).sort(anchorSort);
+  const pool = (!requireConfirmed)
+    ? (unconfirmedFallbackPool.length >= requiredLegs ? unconfirmedFallbackPool : bookPool.filter(p => !p.isTrap).sort(anchorSort))
+    : (strictConfirmed.length >= requiredLegs ? strictConfirmed : allConfirmedClean);
 
-  const distinctTeamProps = [];
-  const seenTeams = new Set();
+  // Pick highest-probability unique players while ensuring at least 2 distinct teams on the ticket
+  const uniquePlayerPool = [];
   const seenPlayers = new Set();
   pool.forEach(p => {
-    if (!seenTeams.has(p.team) && !seenPlayers.has(p.name)) {
-      seenTeams.add(p.team);
-      seenPlayers.add(p.name);
-      distinctTeamProps.push(p);
+    const pKey = p.fullName || p.name;
+    if (!seenPlayers.has(pKey)) {
+      seenPlayers.add(pKey);
+      uniquePlayerPool.push(p);
     }
   });
-  pool.forEach(p => {
-    if (!distinctTeamProps.includes(p) && !seenPlayers.has(p.name)) {
-      seenPlayers.add(p.name);
-      distinctTeamProps.push(p);
-    }
-  });
+  if (requireConfirmed && uniquePlayerPool.length < requiredLegs) {
+    allConfirmedClean.forEach(p => {
+      const pKey = p.fullName || p.name;
+      if (!seenPlayers.has(pKey)) {
+        seenPlayers.add(pKey);
+        uniquePlayerPool.push(p);
+      }
+    });
+  }
 
-  const p1 = distinctTeamProps[0] || PROPS[0];
-  const p2 = distinctTeamProps[1] || PROPS[1];
-  const p3 = distinctTeamProps[2] || PROPS[2];
-  const p4 = distinctTeamProps[3] || PROPS[3];
-  const p5 = distinctTeamProps[4] || PROPS[4] || p1;
+  const distinctTeamProps = uniquePlayerPool.slice();
+  // Guarantee leg #1 and leg #2 represent at least 2 teams so 2-pick, 3-pick, and 5-pick slips are always valid
+  if (distinctTeamProps.length >= 2 && distinctTeamProps[0].team === distinctTeamProps[1].team) {
+    const diffTeamIdx = distinctTeamProps.findIndex((p, idx) => idx > 1 && p.team !== distinctTeamProps[0].team);
+    if (diffTeamIdx > 1) {
+      const [diffProp] = distinctTeamProps.splice(diffTeamIdx, 1);
+      distinctTeamProps.splice(1, 0, diffProp);
+    }
+  }
+
+  const safeFallback = distinctTeamProps[0] || allConfirmedClean[0] || PROPS[0];
+  const p1 = distinctTeamProps[0] || safeFallback;
+  const p2 = distinctTeamProps[1] || safeFallback;
+  const p3 = distinctTeamProps[2] || safeFallback;
+  const p4 = distinctTeamProps[3] || safeFallback;
+  const p5 = distinctTeamProps[4] || safeFallback;
 
   let primaryCardSpec = null;
   let secondaryCardSpec = null;
@@ -10424,7 +10449,7 @@ window.addEventListener("DOMContentLoaded", () => {
   fetchLiveFeed(false);
 
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./service-worker.js?v=26.1").then(reg => {
+    navigator.serviceWorker.register("./service-worker.js?v=26.2").then(reg => {
       try { reg.update(); } catch (e) {}
     }).catch(() => {});
   }
