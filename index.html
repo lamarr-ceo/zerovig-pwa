@@ -19,7 +19,7 @@
   <meta property="og:image" content="https://zerovig.app/icons/og-card.png?v=10" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@500;600;700;800;900&family=Space+Grotesk:wght@600;700;800;900&display=swap" rel="stylesheet" />
   <style>
   * {
     box-sizing: border-box;
@@ -3561,124 +3561,89 @@
     flex-shrink: 0;
   }
   /* === END ZEROVIG v19 === */
-  /* === ZEROVIG v21 UNDERDOG-STYLE CENTERED HERO BRAND HEADER (ZERO TOP CLUTTER) === */
-  .app-header {
-    display: grid !important;
-    grid-template-columns: 1fr auto 1fr !important;
-    align-items: center !important;
-    background: linear-gradient(180deg, #0B0F18 0%, #05070B 100%) !important;
-    border-bottom: 1.5px solid rgba(0, 230, 118, 0.42) !important;
-    padding: 10px 10px 9px !important;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.72);
-    position: relative;
-    gap: 6px;
-  }
-  .zv-header-left {
-    justify-self: start;
-    display: flex;
-    align-items: center;
-    min-width: 0;
-  }
-  .zv-header-center {
-    justify-self: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    text-align: center;
-    user-select: none;
-  }
-  .zv-center-lockup {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-  }
-  .zv-center-crest {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    background: #080C14;
-    border: 1.5px solid #00E676;
-    box-shadow: 0 0 12px rgba(0, 230, 118, 0.28);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-  .zv-center-wordmark {
-    font-family: "Space Grotesk", "Inter", sans-serif;
-    font-size: 26px;
-    font-weight: 900;
-    letter-spacing: -0.04em;
-    text-transform: uppercase;
-    line-height: 0.94;
-    display: inline-flex;
-    align-items: baseline;
-  }
-  .zv-center-wordmark .w-zero {
-    color: #FFFFFF;
-  }
-  .zv-center-wordmark .w-vig {
-    color: #00E676;
-  }
-  .zv-center-wordmark .w-tm {
-    font-size: 8px;
-    font-weight: 900;
-    color: #00E676;
-    margin-left: 2px;
-    position: relative;
-    top: -10px;
-    letter-spacing: 0.02em;
-  }
-  .zv-center-sub {
-    font-family: "Space Grotesk", "Inter", sans-serif;
-    font-size: 7.5px;
-    font-weight: 900;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #B8C1D1;
-    margin-top: 3px;
-    white-space: nowrap;
-  }
-  .zv-center-sub span {
-    color: #00E676;
-  }
-  .zv-header-right {
-    justify-self: end;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .app-header .book-dropdown {
-    height: 28px !important;
-    padding: 0 7px !important;
-    gap: 4px !important;
-    max-width: 104px;
-  }
-  .app-header .book-label {
-    font-size: 10.5px !important;
-    font-weight: 800 !important;
-    max-width: 58px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .app-header .engine-pill {
-    height: 26px !important;
-    padding: 2px !important;
-  }
-  .app-header .eng-seg {
-    padding: 0 6px !important;
-    font-size: 9.5px !important;
-  }
-  .app-header .icon-btn {
-    width: 26px !important;
-    height: 26px !important;
-  }
+  /* === ZEROVIG v22 SOLO ULTRA-HEAVY WORDMARK HEADER (NOTHING BESIDE IT, NO LOGO MARK) === */
   .zv-page-hero {
     display: none !important;
+  }
+  .app-header.zv-solo-wordmark-header {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 54px !important;
+    padding: 10px 14px 9px !important;
+    background: #040507 !important;
+    border-bottom: 1.5px solid rgba(0, 230, 118, 0.38) !important;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.78) !important;
+    position: relative !important;
+    text-align: center !important;
+  }
+  .zv-solo-namemark {
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: center;
+    font-family: "Archivo Black", "Montserrat", "Inter", system-ui, -apple-system, sans-serif;
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    line-height: 0.92;
+    cursor: pointer;
+    user-select: none;
+    transform: scaleX(1.06);
+    text-shadow: 0 2px 14px rgba(0, 230, 118, 0.22);
+  }
+  .zv-solo-namemark .nm-zero {
+    color: #FFFFFF;
+    -webkit-text-stroke: 0.8px #FFFFFF;
+  }
+  .zv-solo-namemark .nm-vig {
+    color: #00E676;
+    -webkit-text-stroke: 0.8px #00E676;
+  }
+  /* Compact Utility Row Below the Solo Wordmark Header */
+  .zv-utility-strip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    background: #080A0F;
+    border-bottom: 1px solid #1A202E;
+  }
+  .zv-utility-strip .book-dropdown {
+    height: 30px !important;
+    padding: 0 8px !important;
+    gap: 5px !important;
+    flex-shrink: 0;
+  }
+  .zv-utility-strip .book-label {
+    font-size: 11px !important;
+    font-weight: 900 !important;
+  }
+  .zv-utility-strip .search-input {
+    flex: 1;
+    min-width: 0;
+    height: 30px !important;
+    padding: 0 9px !important;
+    font-size: 11px !important;
+    border-radius: 7px !important;
+    background: #0F131C !important;
+    border: 1px solid #22293A !important;
+  }
+  .zv-utility-strip .engine-pill {
+    height: 28px !important;
+    padding: 2px !important;
+    flex-shrink: 0;
+  }
+  .zv-utility-strip .eng-seg {
+    padding: 0 6px !important;
+    font-size: 9.5px !important;
+    font-weight: 900 !important;
+  }
+  .zv-utility-strip .icon-btn {
+    width: 28px !important;
+    height: 28px !important;
+    flex-shrink: 0;
   }
   .zv-subpage-bar {
     display: flex;
@@ -3687,7 +3652,7 @@
     padding: 2px 2px 4px;
   }
   .zv-subpage-title {
-    font-family: "Space Grotesk", "Inter", sans-serif;
+    font-family: "Archivo Black", "Montserrat", "Inter", sans-serif;
     font-size: 14px;
     font-weight: 900;
     letter-spacing: 0.04em;
@@ -3709,103 +3674,7 @@
     top: auto !important;
     bottom: 112px !important;
   }
-  /* === END ZEROVIG v21 === */
-  /* === ZEROVIG v21 UNDERDOG-STYLE CENTERED BOLD BRAND HEADER === */
-  .zv-page-hero {
-    display: none !important;
-  }
-  .app-header.zv-underdog-header {
-    position: relative !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    min-height: 58px !important;
-    padding: 8px 10px !important;
-    background: #050608 !important;
-    border-bottom: 1.5px solid rgba(255, 255, 255, 0.10) !important;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7) !important;
-  }
-  .zv-uh-left {
-    display: flex;
-    align-items: center;
-    z-index: 2;
-  }
-  .zv-uh-center {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 1;
-    pointer-events: auto;
-  }
-  .zv-uh-lockup {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .zv-uh-mark {
-    width: 30px;
-    height: 30px;
-    flex-shrink: 0;
-    filter: drop-shadow(0 0 8px rgba(0, 230, 118, 0.35));
-  }
-  .zv-uh-wordmark {
-    font-family: "Space Grotesk", "Inter", sans-serif;
-    font-size: 27px;
-    font-weight: 900;
-    letter-spacing: -0.045em;
-    text-transform: uppercase;
-    line-height: 0.92;
-    display: inline-flex;
-    align-items: baseline;
-  }
-  .zv-uh-wordmark .w-zero {
-    color: #FFFFFF;
-  }
-  .zv-uh-wordmark .w-vig {
-    color: #00E676;
-  }
-  .zv-uh-sub {
-    font-family: "Space Grotesk", "Inter", sans-serif;
-    font-size: 7.5px;
-    font-weight: 900;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #B8C1D1;
-    margin-top: 2px;
-    white-space: nowrap;
-  }
-  .zv-uh-sub span {
-    color: #00E676;
-  }
-  .zv-uh-right {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    z-index: 2;
-  }
-  .zv-uh-right .book-dropdown {
-    padding: 0 7px !important;
-    height: 28px !important;
-    gap: 4px !important;
-  }
-  .zv-uh-right .book-label {
-    font-size: 10.5px !important;
-    max-width: 54px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .zv-uh-right .icon-btn {
-    width: 28px !important;
-    height: 28px !important;
-  }
-  /* === END ZEROVIG v21 === */
+  /* === END ZEROVIG v22 === */
   </style>
 </head>
 <body>
@@ -3816,39 +3685,29 @@
       <div class="status-right"><span>5G</span><span>100%</span></div>
     </div>
 
-    <div class="app-header zv-underdog-header">
-      <div class="zv-uh-left">
-        <div class="engine-pill" id="engineToggleBtn" onclick="toggleEngine()" title="Switch PRO vs STD">
-          <span class="eng-seg active" id="engSegPro">PRO</span>
-          <span class="eng-seg" id="engSegStd">STD</span>
-        </div>
-      </div>
-
-      <div class="brand-logo zv-uh-center" onclick="switchTab('board')">
-        <div class="zv-uh-lockup">
-          <svg class="zv-uh-mark" width="32" height="32" viewBox="18 22 174 166" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M 41.68 58.00 A 74.0 74.0 0 0 1 146.69 50.27 L 139.36 60.49 A 61.5 61.5 0 0 0 59.55 58.00 Z" fill="#FFFFFF"/><path d="M 36.73 147.50 A 74.0 74.0 0 0 0 100.58 179.95 L 92.70 167.27 A 61.5 61.5 0 0 1 52.61 147.50 Z" fill="#FFFFFF"/><path d="M 46.2 65.5 L 113.5 65.5 L 65.5 123.0 L 83.5 123.0 L 94.0 140.0 L 28.5 140.0 L 76.5 82.5 L 32.0 82.5 Z" fill="#FFFFFF"/><path d="M 108.61 179.24 A 74.0 74.0 0 0 0 166.52 78.04 L 157.83 91.75 A 61.5 61.5 0 0 1 101.27 167.41 Z" fill="#00E676"/><path d="M 81.5 105.0 L 97.5 85.8 L 113.0 111.0 L 153.5 54.5 L 143.0 48.0 L 185.0 31.0 L 175.0 73.5 L 166.5 65.0 L 111.0 152.5 Z" fill="#00E676"/></svg>
-          <span class="zv-uh-wordmark"><span class="w-zero">ZERO</span><span class="w-vig">VIG</span></span>
-        </div>
-        <div class="zv-uh-sub">SEE THE ODDS. <span>FIND THE EDGE.</span></div>
-      </div>
-
-      <div class="header-right zv-uh-right">
-        <div class="book-dropdown" id="bookDropdownBtn" onclick="openBookModal(event)">
-          <img id="activeBookLogo" src="" alt="Book" style="width:15px;height:15px;border-radius:4px;object-fit:cover;border:0.5px solid rgba(255,255,255,0.2);">
-          <span class="book-label" id="activeBookLabel">Underdog</span>
-          <span class="live-dot"></span>
-          <span class="book-chev">
-            <svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 4.5 6 8 9.5 4.5"/></svg>
-          </span>
-        </div>
-        <div class="icon-btn" onclick="openSettingsModal(event)" title="My Books & Settings">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        </div>
+    <div class="app-header zv-solo-wordmark-header">
+      <div class="zv-solo-namemark" onclick="switchTab('board')">
+        <span class="nm-zero">ZERO</span><span class="nm-vig">VIG</span>
       </div>
     </div>
 
-    <div class="search-drawer"  id="searchDrawer">
-      <input type="text" class="search-input" id="searchInput" placeholder="Search player, team, or stat (e.g. Luka, Jrue, Points, Shots)..." oninput="onSearchInput(this.value)" />
+    <div class="zv-utility-strip" id="searchDrawer">
+      <div class="book-dropdown" id="bookDropdownBtn" onclick="openBookModal(event)">
+        <img id="activeBookLogo" src="" alt="Book" style="width:15px;height:15px;border-radius:4px;object-fit:cover;border:0.5px solid rgba(255,255,255,0.2);flex-shrink:0;">
+        <span class="book-label" id="activeBookLabel">Underdog</span>
+        <span class="live-dot"></span>
+        <span class="book-chev">
+          <svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 4.5 6 8 9.5 4.5"/></svg>
+        </span>
+      </div>
+      <input type="text" class="search-input" id="searchInput" placeholder="Search player, team, stat..." oninput="onSearchInput(this.value)" />
+      <div class="engine-pill" id="engineToggleBtn" onclick="toggleEngine()" title="Switch PRO vs STD">
+        <span class="eng-seg active" id="engSegPro">PRO</span>
+        <span class="eng-seg" id="engSegStd">STD</span>
+      </div>
+      <div class="icon-btn" onclick="openSettingsModal(event)" title="My Books & Settings">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </div>
     </div>
 
     <div class="book-popover" id="bookPopover" onclick="event.stopPropagation()">
@@ -3902,6 +3761,25 @@
     </div>
 
     <div class="scroll-view" id="mainScroll">
+      <div class="zv-sub-toolbar" id="zvSubToolbar">
+        <div class="engine-pill" id="engineToggleBtn" onclick="toggleEngine()" title="Switch PRO vs STD">
+          <span class="eng-seg active" id="engSegPro">PRO</span>
+          <span class="eng-seg" id="engSegStd">STD</span>
+        </div>
+        <div style="display:inline-flex;align-items:center;gap:6px;">
+          <div class="book-dropdown" id="bookDropdownBtn" onclick="openBookModal(event)">
+            <img id="activeBookLogo" src="" alt="Book" style="width:15px;height:15px;border-radius:4px;object-fit:cover;border:0.5px solid rgba(255,255,255,0.2);">
+            <span class="book-label" id="activeBookLabel">Underdog</span>
+            <span class="live-dot"></span>
+            <span class="book-chev">
+              <svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 4.5 6 8 9.5 4.5"/></svg>
+            </span>
+          </div>
+          <div class="icon-btn" onclick="openSettingsModal(event)" title="My Books & Settings">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </div>
+        </div>
+      </div>
       <div id="tabView-board">
         <div class="board-mode-bar" id="boardModeBar">
           <div class="board-mode-seg">
@@ -7384,7 +7262,7 @@ window.addEventListener("DOMContentLoaded", () => {
   fetchLiveFeed(false);
 
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./service-worker.js?v=21").catch(() => {});
+    navigator.serviceWorker.register("./service-worker.js?v=22").catch(() => {});
   }
 });
 </script>
