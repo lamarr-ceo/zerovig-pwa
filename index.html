@@ -2893,7 +2893,7 @@
     font-size: 9.5px;
     font-weight: 700;
     color: #9BA3B2;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.03em;
   }
   .zv-mb-status {
     font-size: 8.5px;
@@ -3134,7 +3134,7 @@
     font-size: 12px;
     font-weight: 900;
     color: #FFFFFF;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.03em;
   }
   .zv-mb-logo {
     width: 20px;
@@ -3543,7 +3543,7 @@
     font-size: 9.5px;
     font-weight: 900;
     color: #F4F6FA;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.03em;
     line-height: 1;
   }
   .zv-team-pill img {
@@ -3583,23 +3583,23 @@
     align-items: baseline;
     justify-content: center;
     font-family: "Archivo Black", "Montserrat", "Inter", system-ui, -apple-system, sans-serif;
-    font-size: 32px;
+    font-size: 35px;
     font-weight: 900;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.03em;
     text-transform: uppercase;
     line-height: 0.92;
     cursor: pointer;
     user-select: none;
-    transform: scaleX(1.06);
+    transform: scaleX(1.08);
     text-shadow: 0 2px 14px rgba(0, 230, 118, 0.22);
   }
   .zv-solo-namemark .nm-zero {
     color: #FFFFFF;
-    -webkit-text-stroke: 0.8px #FFFFFF;
+    -webkit-text-stroke: 1.6px #FFFFFF;
   }
   .zv-solo-namemark .nm-vig {
     color: #00E676;
-    -webkit-text-stroke: 0.8px #00E676;
+    -webkit-text-stroke: 1.6px #00E676;
   }
   /* Compact Utility Row Below the Solo Wordmark Header */
   .zv-utility-strip {
@@ -3691,23 +3691,8 @@
       </div>
     </div>
 
-    <div class="zv-utility-strip" id="searchDrawer">
-      <div class="book-dropdown" id="bookDropdownBtn" onclick="openBookModal(event)">
-        <img id="activeBookLogo" src="" alt="Book" style="width:15px;height:15px;border-radius:4px;object-fit:cover;border:0.5px solid rgba(255,255,255,0.2);flex-shrink:0;">
-        <span class="book-label" id="activeBookLabel">Underdog</span>
-        <span class="live-dot"></span>
-        <span class="book-chev">
-          <svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 4.5 6 8 9.5 4.5"/></svg>
-        </span>
-      </div>
-      <input type="text" class="search-input" id="searchInput" placeholder="Search player, team, stat..." oninput="onSearchInput(this.value)" />
-      <div class="engine-pill" id="engineToggleBtn" onclick="toggleEngine()" title="Switch PRO vs STD">
-        <span class="eng-seg active" id="engSegPro">PRO</span>
-        <span class="eng-seg" id="engSegStd">STD</span>
-      </div>
-      <div class="icon-btn" onclick="openSettingsModal(event)" title="My Books & Settings">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      </div>
+    <div class="search-drawer" id="searchDrawer">
+      <input type="text" class="search-input" id="searchInput" placeholder="Search player, team, or stat (e.g. Luka, Jrue, Points, Shots)..." oninput="onSearchInput(this.value)" />
     </div>
 
     <div class="book-popover" id="bookPopover" onclick="event.stopPropagation()">
@@ -3761,25 +3746,6 @@
     </div>
 
     <div class="scroll-view" id="mainScroll">
-      <div class="zv-sub-toolbar" id="zvSubToolbar">
-        <div class="engine-pill" id="engineToggleBtn" onclick="toggleEngine()" title="Switch PRO vs STD">
-          <span class="eng-seg active" id="engSegPro">PRO</span>
-          <span class="eng-seg" id="engSegStd">STD</span>
-        </div>
-        <div style="display:inline-flex;align-items:center;gap:6px;">
-          <div class="book-dropdown" id="bookDropdownBtn" onclick="openBookModal(event)">
-            <img id="activeBookLogo" src="" alt="Book" style="width:15px;height:15px;border-radius:4px;object-fit:cover;border:0.5px solid rgba(255,255,255,0.2);">
-            <span class="book-label" id="activeBookLabel">Underdog</span>
-            <span class="live-dot"></span>
-            <span class="book-chev">
-              <svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 4.5 6 8 9.5 4.5"/></svg>
-            </span>
-          </div>
-          <div class="icon-btn" onclick="openSettingsModal(event)" title="My Books & Settings">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          </div>
-        </div>
-      </div>
       <div id="tabView-board">
         <div class="board-mode-bar" id="boardModeBar">
           <div class="board-mode-seg">
@@ -3821,10 +3787,21 @@
             <span class="live-feed-dot"></span>
             <span id="liveFeedStatusText"><strong style="color:#00E676;">Live Odds</strong> · 20 Apps Synced</span>
           </div>
-          <div style="display:inline-flex;align-items:center;gap:6px;flex-shrink:0;">
+          <div style="display:inline-flex;align-items:center;gap:5px;flex-shrink:0;">
+            <div class="engine-pill" id="engineToggleBtn" onclick="toggleEngine()" title="Switch PRO vs STD" style="transform:scale(0.92);">
+              <span class="eng-seg active" id="engSegPro">PRO</span>
+              <span class="eng-seg" id="engSegStd">STD</span>
+            </div>
+            <div class="book-dropdown" id="bookDropdownBtn" onclick="openBookModal(event)" style="height:24px;padding:0 6px;">
+              <img id="activeBookLogo" src="" alt="Book" style="width:13px;height:13px;border-radius:3px;object-fit:cover;">
+              <span class="book-label" id="activeBookLabel" style="font-size:10px;">Underdog</span>
+              <span class="live-dot"></span>
+            </div>
+            <div class="icon-btn" onclick="openSettingsModal(event)" title="My Books & Settings" style="width:24px;height:24px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </div>
             <button class="live-sync-pill" id="liveSyncBtn" onclick="fetchLiveFeed(true)">
               <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9"/><polyline points="13.5 1.8 13.5 4.8 10.5 4.8"/></svg>
-              <span>Refresh</span>
             </button>
           </div>
         </div>
