@@ -19,7 +19,7 @@
   <meta property="og:image" content="https://zerovig.app/icons/og-card.png?v=10" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@500;600;700;800;900&family=Space+Grotesk:wght@600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@500;600;700;800;900&family=Space+Grotesk:wght@600;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <style>
   * {
     box-sizing: border-box;
@@ -3562,6 +3562,9 @@
   }
   /* === END ZEROVIG v19 === */
   /* === ZEROVIG v22 SOLO ULTRA-HEAVY WORDMARK HEADER (NOTHING BESIDE IT, NO LOGO MARK) === */
+  .board-mode-bar {
+    display: none !important;
+  }
   .zv-page-hero {
     display: none !important;
   }
@@ -4596,6 +4599,13 @@ function getTodayCtIsoDate() {
 }
 
 async function verifyLiveLineupsFromOfficialAPIs(isManual) {
+  if (typeof window !== "undefined" && window.location && window.location.protocol === "file:") {
+    window.lastLineupVerifyCt = getCurrentCtTimeLabel();
+    normalizeLivePropsLineups();
+    renderFilterStrips();
+    renderAll();
+    return;
+  }
   const todayIso = getTodayCtIsoDate();
   const ymd = todayIso.replace(/-/g, "");
   const nbaAlias = {
@@ -4948,21 +4958,27 @@ function renderSettingsModal() {
   if (!mount) return;
   const enabledSet = new Set(state.enabledBooks);
   const isPro = state.engine === "pro";
-  let html = `
-    <div style="background:#0E121B;border:1px solid rgba(0,230,118,0.28);border-radius:10px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
-      <div>
+  const isAdminProfile = state.isAdminProfile !== false;
+  let html = isAdminProfile ? `
+    <div id="adminProfileSettingsCard" style="background:linear-gradient(180deg,#101622 0%,#0B0F17 100%);border:1.5px solid rgba(0,230,118,0.38);border-radius:11px;padding:11px 12px;margin-bottom:8px;display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
         <div style="display:flex;align-items:center;gap:6px;">
-          <span style="font-size:9px;font-weight:900;letter-spacing:0.06em;text-transform:uppercase;padding:2px 6px;border-radius:4px;background:rgba(0,230,118,0.16);color:#00E676;border:1px solid rgba(0,230,118,0.35);">ADMIN ONLY</span>
-          <span style="font-size:12px;font-weight:900;color:#F4F6FA;">Tier Preview Toggle</span>
+          <span style="font-size:9px;font-weight:900;letter-spacing:0.06em;text-transform:uppercase;padding:2.5px 6px;border-radius:4px;background:rgba(0,230,118,0.18);color:#00E676;border:1px solid rgba(0,230,118,0.4);">ADMIN PROFILE · OWNER</span>
+          <span style="font-size:11px;font-weight:800;color:#9BA3B2;">Not visible in production</span>
         </div>
-        <div style="font-size:10px;color:#9BA3B2;margin-top:3px;">Hidden from production users · Admin profile override</div>
       </div>
-      <div class="engine-pill" id="engineToggleBtn" onclick="toggleEngine()" title="Admin Tier Override: PRO vs STD" style="height:28px;padding:2px;flex-shrink:0;">
-        <span class="eng-seg ${isPro ? "active" : ""}" id="engSegPro" style="padding:0 8px;font-size:10px;font-weight:900;">PRO</span>
-        <span class="eng-seg ${!isPro ? "active" : ""}" id="engSegStd" style="padding:0 8px;font-size:10px;font-weight:900;">STD</span>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+        <div>
+          <div style="font-size:12.5px;font-weight:900;color:#F4F6FA;">Engine Tier Override (PRO / STD)</div>
+          <div style="font-size:10px;color:#9BA3B2;margin-top:2px;">Switch between PRO and Standard views from your admin profile</div>
+        </div>
+        <div class="engine-pill" id="engineToggleBtn" onclick="toggleEngine()" title="Admin Tier Override: PRO vs STD" style="height:30px;padding:2px;flex-shrink:0;">
+          <span class="eng-seg ${isPro ? "active" : ""}" id="engSegPro" style="padding:0 9px;font-size:10.5px;font-weight:900;">PRO</span>
+          <span class="eng-seg ${!isPro ? "active" : ""}" id="engSegStd" style="padding:0 9px;font-size:10.5px;font-weight:900;">STANDARD</span>
+        </div>
       </div>
     </div>
-  `;
+  ` : "";
   BOOK_CATEGORIES.forEach(cat => {
     html += `<div style="font-size:10px;font-weight:800;color:#9BA3B2;letter-spacing:0.06em;text-transform:uppercase;margin-top:4px;">${cat.title}</div>`;
     cat.books.forEach(k => {
