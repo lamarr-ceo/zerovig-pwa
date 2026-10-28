@@ -5536,6 +5536,7 @@
   }
 
 
+  
   /* === v25.3: BULLETPROOF MOBILE & DESKTOP SPORTSBOOK SWITCHER + PER-BOOK BOARD === */
   #topBookSwitcherBar,
   .zv-book-switcher-bar {
@@ -5691,6 +5692,133 @@
   }
 
   #bookSyncBanner, .zv-book-sync-banner, .zv-book-sync-hud { display: none !important; }
+
+  /* === v25.4: FULL-LEGIBILITY ZERO-TRUNCATION PLAYER CARDS === */
+  .zv-card {
+    padding: 13px 14px !important;
+    gap: 10px !important;
+    overflow: visible !important;
+  }
+  .p-head {
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+  .p-left {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 11px !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+  .p-info-col {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    overflow: visible !important;
+  }
+  .p-nm {
+    font-family: "Space Grotesk", "Inter", sans-serif !important;
+    font-size: 15px !important;
+    font-weight: 900 !important;
+    letter-spacing: -0.015em !important;
+    line-height: 1.2 !important;
+    color: #FFFFFF !important;
+    text-transform: uppercase !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+  }
+  .p-gm {
+    margin-top: 0 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    line-height: 1.3 !important;
+  }
+  .zv-player-sub {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 4px 5px !important;
+    margin-top: 1px !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    line-height: 1.3 !important;
+  }
+  .p-right-badges {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    justify-content: flex-start !important;
+    gap: 5px !important;
+    flex-shrink: 0 !important;
+  }
+  .zv-badge {
+    font-size: 10.5px !important;
+    padding: 4px 8px !important;
+    line-height: 1.15 !important;
+    white-space: nowrap !important;
+  }
+  .zv-more-stats-btn {
+    font-size: 10px !important;
+    padding: 4px 8px !important;
+    line-height: 1.15 !important;
+    white-space: nowrap !important;
+  }
+  .zv-fav-star-badge {
+    font-size: 8.5px !important;
+    padding: 2px 5px !important;
+    border-radius: 4px !important;
+    line-height: 1.15 !important;
+    white-space: nowrap !important;
+  }
+  .s-hdr {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 6px 8px !important;
+  }
+  .s-lbl {
+    font-size: 13px !important;
+    font-weight: 900 !important;
+    color: #FFFFFF !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+  .s-vals {
+    display: flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+  .zv-gauge {
+    grid-template-columns: minmax(80px, auto) 1fr minmax(80px, auto) !important;
+    height: 40px !important;
+    gap: 6px !important;
+  }
+  .g-btn {
+    padding: 0 8px !important;
+    white-space: nowrap !important;
+    font-size: 12px !important;
+  }
+  .rc-bk {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    line-height: 1.15 !important;
+  }
+
 </style>
 </head>
 <body>
@@ -5718,7 +5846,7 @@
         <span class="zv-search-icon">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </span>
-        <input type="text" class="search-input" id="searchInput" placeholder="Search player, team, or stat (Luka, BOS, Points)..." oninput="onSearchInput(this.value)" />
+        <input type="text" class="search-input" id="searchInput" placeholder="Search player, team, or stat..." oninput="onSearchInput(this.value)" />
       </div>
       <button class="zv-fav-pill-btn" onclick="openOnboardingModal(1)" title="Pick Favorite Sportsbooks, Leagues & Teams">
         <span>★ MY TEAMS</span>
@@ -5873,37 +6001,17 @@ const SVG_EXT_LINK  = '<svg class="vec-icon" width="13" height="13" viewBox="0 0
 const SVG_WARN      = '<svg class="vec-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
 
 window.getAvatarFallback = function(name) {
-  const parts = String(name || 'Player').replace(/['".]/g, '').trim().split(/\s+/);
+  const parts = String(name || 'Player').replace('.', '').trim().split(/\s+/);
   const initials = ((parts[0] ? parts[0][0] : 'P') + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toUpperCase();
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><defs><linearGradient id="avg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1C2436"/><stop offset="100%" stop-color="#0E131D"/></linearGradient></defs><rect width="80" height="80" rx="40" fill="url(#avg)" stroke="#00E676" stroke-opacity="0.45" stroke-width="2.5"/><circle cx="40" cy="29" r="11" fill="#2A354D"/><path d="M18 68c3-13 13-19 22-19s19 6 22 19" fill="#232D42"/><text x="40" y="51" text-anchor="middle" font-family="Space Grotesk,Inter,-apple-system,sans-serif" font-size="22" font-weight="900" fill="#00E676">${initials}</text></svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><rect width="80" height="80" rx="40" fill="#141821" stroke="rgba(255,255,255,0.16)" stroke-width="2"/><text x="40" y="48" text-anchor="middle" font-family="Space Grotesk,Inter,-apple-system,sans-serif" font-size="26" font-weight="700" fill="#F5F7FA">${initials}</text></svg>`;
   return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
 };
 
-const RICH_BOOK_SVG_LOGOS = {
-  sleeper: `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><defs><linearGradient id="slg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1E293B"/><stop offset="100%" stop-color="#0F172A"/></linearGradient></defs><rect width="64" height="64" rx="14" fill="url(#slg)" stroke="#00E676" stroke-width="2"/><circle cx="32" cy="30" r="15" fill="#00E676" opacity="0.18"/><path d="M22 28c3-5 17-5 20 0-2 7-18 7-20 0z" fill="#00E676"/><circle cx="27" cy="28" r="2.2" fill="#090D16"/><circle cx="37" cy="28" r="2.2" fill="#090D16"/><path d="M25 36c3 2.5 11 2.5 14 0" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round" fill="none"/><text x="32" y="54" text-anchor="middle" font-family="Space Grotesk,Inter,sans-serif" font-size="9.5" font-weight="900" fill="#00E676" letter-spacing="0.06em">SLEEPER</text></svg>`,
-  betr: `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#4C1D95" stroke="#A78BFA" stroke-width="2"/><path d="M35 12L20 34h11l-3 18 16-23H33l2-17z" fill="#FACC15"/></svg>`,
-  chalkboard: `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#0F291E" stroke="#34D399" stroke-width="2"/><rect x="14" y="16" width="36" height="26" rx="4" fill="#064E3B" stroke="#A7F3D0" stroke-width="2"/><path d="M20 29l6 6 14-12" stroke="#34D399" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><line x1="22" y1="48" x2="42" y2="48" stroke="#A7F3D0" stroke-width="3" stroke-linecap="round"/></svg>`,
-  pick6: `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#111827" stroke="#F97316" stroke-width="2"/><path d="M16 20l8 7 8-9 8 9 8-7-4 17H20L16 20z" fill="#F97316"/><text x="32" y="54" text-anchor="middle" font-family="Space Grotesk,Inter,sans-serif" font-size="13" font-weight="900" fill="#6EE7B7">PICK6</text></svg>`,
-  espnbet: `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#062C2B" stroke="#2DD4BF" stroke-width="2"/><rect x="11" y="16" width="42" height="15" rx="4" fill="#EF4444"/><text x="32" y="27" text-anchor="middle" font-family="Space Grotesk,Inter,sans-serif" font-size="11" font-weight="900" font-style="italic" fill="#FFFFFF">ESPN</text><text x="32" y="48" text-anchor="middle" font-family="Space Grotesk,Inter,sans-serif" font-size="15" font-weight="900" fill="#2DD4BF">BET</text></svg>`,
-  fanatics: `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#171923" stroke="#EF4444" stroke-width="2"/><path d="M20 16h24v8H28v6h13v8H28v12h-8V16z" fill="#FFFFFF"/><path d="M40 16l8 8-8 8" fill="#EF4444"/></svg>`,
-  betrivers: `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#0C2D57" stroke="#FBBF24" stroke-width="2"/><path d="M14 38c8-6 14 6 22 0s10-6 14-2" stroke="#FBBF24" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M14 27c8-6 14 6 22 0s10-6 14-2" stroke="#38BDF8" stroke-width="4" stroke-linecap="round" fill="none"/><text x="32" y="53" text-anchor="middle" font-family="Space Grotesk,Inter,sans-serif" font-size="10" font-weight="900" fill="#FFFFFF">RIVERS</text></svg>`,
-  hardrock: `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#1E1035" stroke="#F59E0B" stroke-width="2"/><circle cx="32" cy="32" r="17" fill="#F59E0B" opacity="0.2" stroke="#F59E0B" stroke-width="2"/><text x="32" y="30" text-anchor="middle" font-family="Space Grotesk,Inter,sans-serif" font-size="11" font-weight="900" fill="#FDE68A">HARD</text><text x="32" y="42" text-anchor="middle" font-family="Space Grotesk,Inter,sans-serif" font-size="11" font-weight="900" fill="#FFFFFF">ROCK</text></svg>`,
-  bovada: `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#2A0808" stroke="#EF4444" stroke-width="2"/><path d="M20 16h14c6 0 10 3 10 8 0 3-2 6-5 7 4 1 6 4 6 8 0 6-5 9-11 9H20V16zm8 12h5c2 0 4-1 4-3s-2-3-4-3h-5v6zm0 13h6c3 0 4-1 4-4s-1-4-4-4h-6v8z" fill="#EF4444"/></svg>`,
-  fliff: `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#082032" stroke="#00F5D4" stroke-width="2"/><path d="M18 42l9-20 8 12 11-16" stroke="#00F5D4" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="46" cy="18" r="4" fill="#00F5D4"/><text x="32" y="54" text-anchor="middle" font-family="Space Grotesk,Inter,sans-serif" font-size="11" font-weight="900" fill="#FFFFFF">FLIFF</text></svg>`,
-  kalshi: `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#06281E" stroke="#10B981" stroke-width="2"/><path d="M21 16v32M21 32l18-16M27 27l14 21" stroke="#10B981" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`,
-  polymarket: `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#0B1938" stroke="#3B82F6" stroke-width="2"/><polygon points="32,14 48,24 48,40 32,50 16,40 16,24" fill="none" stroke="#60A5FA" stroke-width="3.5"/><polygon points="32,22 41,27 41,37 32,42 23,37 23,27" fill="#3B82F6"/></svg>`,
-  prophetx: `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#18122B" stroke="#C084FC" stroke-width="2"/><path d="M20 20l24 24M44 20L20 44" stroke="#C084FC" stroke-width="4.5" stroke-linecap="round"/></svg>`
-};
-
 window.getBookLogo = function(key, abbr) {
-  const k = String(key || "").toLowerCase();
-  if (RICH_BOOK_SVG_LOGOS[k]) {
-    return "data:image/svg+xml;utf8," + encodeURIComponent(RICH_BOOK_SVG_LOGOS[k]);
-  }
-  if (typeof LOGOS !== "undefined" && LOGOS[k]) return LOGOS[k];
-  const label = String(abbr || key || "BK").slice(0, 3).toUpperCase();
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#141821" stroke="#00E676" stroke-width="2"/><text x="32" y="39" text-anchor="middle" font-family="Space Grotesk,Inter,-apple-system,sans-serif" font-size="20" font-weight="900" fill="#F5F7FA">${label}</text></svg>`;
-  return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+  if (typeof LOGOS !== 'undefined' && LOGOS[key]) return LOGOS[key];
+  const label = String(abbr || key || 'BK').slice(0, 2).toUpperCase();
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#141821" stroke="rgba(255,255,255,0.18)" stroke-width="2"/><text x="32" y="40" text-anchor="middle" font-family="Space Grotesk,Inter,-apple-system,sans-serif" font-size="22" font-weight="800" fill="#F5F7FA">${label}</text></svg>`;
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
 };
 
 const BOOKS_META = {
@@ -5943,7 +6051,7 @@ const DFS_BREAKEVEN_PROB = 0.5495;
 let state = {
   sport: "ALL",
   game: "ALL",
-  book: (function(){ try { const b = localStorage.getItem("zerovig_active_book"); return b || "underdog"; } catch(e){ return "underdog"; } })(),
+  book: "underdog",
   enabledBooks: ["underdog", "prizepicks", "draftkings", "fanduel", "sleeper", "betmgm"],
   engine: "pro", // 'pro' | 'std'
   boardMode: "all", // 'picks' (Best Cushions) | 'all' (All Games)
@@ -5998,145 +6106,8 @@ try {
 
 window.zerovigCalibrationLog = [];
 
-
-// === v25.3: PER-BOOK DYNAMIC PRICING, PROBABILITIES, SLIDERS & SWITCHER ===
-function _zvHashStr(s) {
-  let h = 2166136261 >>> 0;
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return h >>> 0;
-}
-
-function _zvFormatAmerican(prob) {
-  const p = Math.max(0.08, Math.min(0.92, prob));
-  if (Math.abs(p - 0.5) < 0.005) return "-100";
-  if (p >= 0.5) {
-    const odds = -Math.round((p / (1 - p)) * 100);
-    return String(odds);
-  } else {
-    const odds = Math.round(((1 - p) / p) * 100);
-    return "+" + String(odds);
-  }
-}
-
-window.getBookSpecificPropMetrics = function(p, bookKey, eng) {
-  const bkKey = bookKey || (typeof state !== "undefined" && state.book ? state.book : "underdog");
-  const mode = eng || (typeof state !== "undefined" && state.engine ? state.engine : "pro");
-  const meta = (typeof BOOKS_META !== "undefined" && BOOKS_META[bkKey]) ? BOOKS_META[bkKey] : { name: "Underdog", abbr: "UD", cat: "dfs" };
-  const baseLine = Number(p.line);
-  const rawBk = (p.books && p.books[bkKey]) ? p.books[bkKey] : null;
-  let bookLine = (rawBk && rawBk.line !== undefined && rawBk.line !== null) ? Number(rawBk.line) : baseLine;
-
-  const h = _zvHashStr(String(p.id || p.name || "") + "::" + bkKey);
-  const bookIndex = _zvHashStr(bkKey) % 17;
-
-  // When a non-Underdog book has the exact same fallback line on higher-line stats, apply realistic per-book line/hook or pricing variance
-  if (bkKey !== "underdog" && bookLine === baseLine) {
-    if (baseLine >= 12.5 && (h % 4 === 0)) {
-      bookLine = (h % 2 === 0) ? +(baseLine + 0.5).toFixed(1) : +(baseLine - 0.5).toFixed(1);
-    } else if (baseLine >= 3.5 && (h % 5 === 0)) {
-      bookLine = (h % 2 === 0) ? +(baseLine + 0.5).toFixed(1) : +(baseLine - 0.5).toFixed(1);
-    } else if (baseLine >= 1.5 && (h % 4 === 1)) {
-      bookLine = (h % 2 === 0) ? +(baseLine + 0.5).toFixed(1) : Math.max(0.5, +(baseLine - 0.5).toFixed(1));
-    }
-  }
-
-  let baseOver = (mode === "pro" && p.probOverPro !== undefined) ? Number(p.probOverPro) :
-                 (mode === "std" && p.probOverStd !== undefined) ? Number(p.probOverStd) :
-                 Number(p.probOver || 0.5);
-  let baseUnder = (mode === "pro" && p.probUnderPro !== undefined) ? Number(p.probUnderPro) :
-                  (mode === "std" && p.probUnderStd !== undefined) ? Number(p.probUnderStd) :
-                  Number(p.probUnder || (1 - baseOver));
-
-  // Adjust Over/Under probability when bookLine differs from baseLine, plus book-specific pricing/hold sensitivity
-  const lineDiff = bookLine - baseLine;
-  const scale = Math.max(1.6, Math.abs(Number(p.mean || baseLine || 2.0)) * 0.52);
-  let probShift = 0;
-  if (Math.abs(lineDiff) > 0.001) {
-    // Higher line -> lower Over probability, higher Under probability
-    probShift = -(lineDiff / scale) * 0.24;
-  } else if (bkKey !== "underdog") {
-    // Book-specific vig/shading shift (-3% to +3%) so each book ranks its sharpest edges distinctly
-    const micro = (((h % 13) - 6) * 0.0055) + (((bookIndex % 5) - 2) * 0.003);
-    probShift = micro;
-  }
-
-  const adjOver = Math.max(0.14, Math.min(0.86, +(baseOver + probShift).toFixed(2)));
-  const adjUnder = Math.max(0.14, Math.min(0.86, +(1 - adjOver).toFixed(2)));
-  const recSide = adjOver >= adjUnder ? "over" : "under";
-  const bestProb = Math.max(adjOver, adjUnder);
-
-  // Compute book-specific price / multiplier badge & fair break-even
-  let priceBadge = "";
-  let effMult = Number(p.mult || 1.0);
-  let breakEven = 0.540;
-
-  if (bkKey === "underdog") {
-    effMult = Number(p.mult || 1.0);
-    priceBadge = `${effMult.toFixed(2)}X`;
-    breakEven = effMult < 1.0 ? Math.min(0.60, +(0.540 / effMult).toFixed(3)) : 0.540;
-  } else if (bkKey === "prizepicks") {
-    if (bookLine > baseLine) {
-      effMult = 1.12;
-      priceBadge = "PP 1.12X";
-      breakEven = 0.515;
-    } else if (bookLine < baseLine) {
-      effMult = 0.88;
-      priceBadge = "PP 0.88X";
-      breakEven = 0.575;
-    } else {
-      effMult = 1.00;
-      priceBadge = "PP 1.00X";
-      breakEven = 0.542;
-    }
-  } else if (bkKey === "sleeper" || bkKey === "betr" || bkKey === "chalkboard" || bkKey === "pick6" || bkKey === "fliff") {
-    const payoutMult = +(1.66 + ((h % 19) * 0.015)).toFixed(2);
-    effMult = +(payoutMult / 1.77).toFixed(2);
-    priceBadge = `${meta.abbr} ${payoutMult.toFixed(2)}X`;
-    breakEven = +(1 / payoutMult).toFixed(3);
-  } else if (bkKey === "kalshi" || bkKey === "polymarket") {
-    const cents = Math.max(46, Math.min(64, 51 + (h % 13)));
-    priceBadge = `${meta.abbr} ${cents}¢`;
-    breakEven = cents / 100;
-  } else if (bkKey === "pinnacle" || bkKey === "prophetx") {
-    const mktProb = 0.512 + ((h % 11) * 0.0045);
-    const am = _zvFormatAmerican(mktProb);
-    priceBadge = `${meta.abbr} ${am}`;
-    breakEven = mktProb;
-  } else {
-    // US Sportsbooks (DraftKings, FanDuel, BetMGM, Caesars, ESPN BET, Fanatics, BetRivers, Hard Rock, Bovada)
-    const mktImplied = 0.518 + ((h % 14) * 0.0042) + ((bookIndex % 4) * 0.0025);
-    const am = _zvFormatAmerican(mktImplied);
-    priceBadge = `${meta.abbr} ${am}`;
-    breakEven = mktImplied;
-  }
-
-  const edgePct = Math.round((bestProb - breakEven) * 1000) / 10;
-  const isBookPick = Boolean(p.lineupConfirmed && !p.isTrap && bestProb >= 0.56 && edgePct >= 1.5);
-
-  return {
-    bookKey: bkKey,
-    bookName: meta.name,
-    bookAbbr: meta.abbr,
-    bookLine: bookLine,
-    probOver: adjOver,
-    probUnder: adjUnder,
-    recSide: recSide,
-    bestProb: bestProb,
-    edge: edgePct,
-    priceBadge: priceBadge,
-    effMult: effMult,
-    isBookPick: isBookPick
-  };
-};
-
 function getPropOverProb(p, engOverride) {
   const eng = engOverride || state.engine;
-  if (window.getBookSpecificPropMetrics && p) {
-    return window.getBookSpecificPropMetrics(p, state.book, eng).probOver;
-  }
   if (eng === "std" && typeof p.probOverStd === "number") return p.probOverStd;
   if (eng === "pro" && typeof p.probOverPro === "number") return p.probOverPro;
   return p.probOver;
@@ -6144,9 +6115,6 @@ function getPropOverProb(p, engOverride) {
 
 function getPropUnderProb(p, engOverride) {
   const eng = engOverride || state.engine;
-  if (window.getBookSpecificPropMetrics && p) {
-    return window.getBookSpecificPropMetrics(p, state.book, eng).probUnder;
-  }
   if (eng === "std" && typeof p.probUnderStd === "number") return p.probUnderStd;
   if (eng === "pro" && typeof p.probUnderPro === "number") return p.probUnderPro;
   return p.probUnder;
@@ -6388,23 +6356,19 @@ function getZvCircleArrowEmblemSvg(sizePx, accentColor) {
 }
 
 const ESPN_TEAM_SLUG_MAP = {
-  "NBA:NOP": "no", "NBA:GSW": "gs", "NBA:NYK": "ny", "NBA:SAS": "sa", "NBA:UTA": "utah", "NBA:WAS": "wsh",
-  "NBA:LAL": "lal", "NBA:BOS": "bos", "NBA:DEN": "den", "NBA:MIL": "mil", "NBA:PHX": "phx", "NBA:DAL": "dal",
-  "NBA:OKC": "okc", "NBA:MIN": "min", "NBA:CLE": "cle", "NBA:MIA": "mia", "NBA:PHI": "phi", "NBA:HOU": "hou",
-  "NBA:MEM": "mem", "NBA:SAC": "sac", "NBA:ORL": "orl", "NBA:DET": "det", "NBA:IND": "ind", "NBA:ATL": "atl",
-  "NBA:BKN": "bkn", "NBA:CHI": "chi", "NBA:TOR": "tor", "NBA:LAC": "lac", "NBA:POR": "por", "NBA:CHA": "cha",
-  "NHL:NJ": "nj", "NHL:NJD": "nj", "NHL:TB": "tb", "NHL:TBL": "tb", "NHL:COL": "col", "NHL:VGK": "vgk",
-  "NHL:EDM": "edm", "NHL:TOR": "tor", "NHL:NYR": "nyr", "NHL:CAR": "car", "NHL:DAL": "dal", "NHL:FLA": "fla",
-  "NHL:BOS": "bos", "NHL:VAN": "van", "NHL:WPG": "wpg", "NHL:NSH": "nsh", "NHL:MIN": "min", "NHL:LAK": "la",
-  "NHL:LA": "la", "NHL:SEA": "sea", "NHL:CGY": "cgy", "NHL:PHI": "phi", "NHL:WSH": "wsh", "NHL:PIT": "pit",
-  "NHL:DET": "det", "NHL:BUF": "buf", "NHL:OTT": "ott", "NHL:MTL": "mtl", "NHL:STL": "stl", "NHL:UTA": "utah",
-  "MLB:CWS": "chw", "MLB:CHW": "chw", "MLB:AZ": "ari", "MLB:ARI": "ari", "MLB:WAS": "wsh", "MLB:WSH": "wsh",
-  "MLB:LAD": "lad", "MLB:NYY": "nyy", "MLB:KC": "kc", "MLB:NYM": "nym", "MLB:PHI": "phi", "MLB:SD": "sd",
-  "MLB:ATL": "atl", "MLB:HOU": "hou", "MLB:BAL": "bal", "MLB:DET": "det", "MLB:CLE": "cle", "MLB:MIL": "mil",
-  "MLB:BOS": "bos", "MLB:CHC": "chc", "MLB:SF": "sf", "MLB:SEA": "sea", "MLB:TEX": "tex", "MLB:TOR": "tor",
-  "NFL:WAS": "wsh", "NFL:KC": "kc", "NFL:BUF": "buf", "NFL:DET": "det", "NFL:BAL": "bal", "NFL:SF": "sf",
-  "NFL:GB": "gb", "NFL:PHI": "phi", "NFL:MIN": "min", "NFL:HOU": "hou", "NFL:CIN": "cin", "NFL:DAL": "dal",
-  "NFL:PIT": "pit", "NFL:DEN": "den", "NFL:LAC": "lac", "NFL:ATL": "atl", "NFL:SEA": "sea", "NFL:CHI": "chi"
+  "NBA:NOP": "no",
+  "NBA:GSW": "gs",
+  "NBA:NYK": "ny",
+  "NBA:SAS": "sa",
+  "NBA:UTA": "utah",
+  "NBA:WAS": "wsh",
+  "NHL:NJ": "nj",
+  "NHL:TB": "tb",
+  "MLB:CWS": "chw",
+  "MLB:CHW": "chw",
+  "MLB:AZ": "ari",
+  "MLB:WAS": "wsh",
+  "NFL:WAS": "wsh"
 };
 
 const TEAM_BRAND_COLORS = {
@@ -6633,19 +6597,20 @@ function togglePlayerExpand(playerKey, e) {
 
 function getBookData(p, bookKey) {
   const k = bookKey || state.book;
-  const meta = BOOKS_META[k] || BOOKS_META.underdog;
-  const bm = (window.getBookSpecificPropMetrics && p) ? window.getBookSpecificPropMetrics(p, k, state.engine) : null;
-  let fallbackLine = bm ? bm.bookLine : ((p && typeof p.line === "number") ? p.line : ((p && p.books && p.books.underdog) ? p.books.underdog.line : 0));
+  let fallbackLine = (p && typeof p.line === "number") ? p.line : ((p && p.books && p.books.underdog) ? p.books.underdog.line : 0);
+  if (k === "pinnacle" && p && typeof p.pinnLine === "number") fallbackLine = p.pinnLine;
+  else if (k === "fanduel" && p && typeof p.fdLine === "number") fallbackLine = p.fdLine;
+  else if (k === "draftkings" && p && typeof p.dkLine === "number") fallbackLine = p.dkLine;
   const raw = (p && p.books && p.books[k]) ? p.books[k] : { line: fallbackLine };
-  const lineVal = bm ? bm.bookLine : raw.line;
-  const oProb = bm ? bm.probOver : getPropOverProb(p);
-  const uProb = bm ? bm.probUnder : getPropUnderProb(p);
+  const meta = BOOKS_META[k] || BOOKS_META.underdog;
+  const oProb = getPropOverProb(p);
+  const uProb = getPropUnderProb(p);
   let overStr = raw.over;
   let underStr = raw.under;
   if (!overStr || !underStr) {
     if (meta && meta.isDfs) {
-      overStr = bm ? bm.priceBadge : "1.00x";
-      underStr = bm ? bm.priceBadge : "1.00x";
+      overStr = "1.00x";
+      underStr = "1.00x";
     } else if (k === "kalshi" || k === "polymarket") {
       overStr = Math.round(oProb * 100) + "¢";
       underStr = Math.round(uProb * 100) + "¢";
@@ -6655,17 +6620,11 @@ function getBookData(p, bookKey) {
     }
   }
   return {
-    line: lineVal,
-    abbr: meta ? meta.abbr : "BOOK",
-    name: meta ? meta.name : "Sportsbook",
-    priceBadge: bm ? bm.priceBadge : "",
+    line: raw.line,
     delta: raw.delta || "",
     over: overStr,
     under: underStr,
-    mult: bm ? bm.effMult : (raw.mult || 1.0),
-    edge: bm ? bm.edge : (p ? p.edge : 0),
-    bestProb: bm ? bm.bestProb : (p ? p.bestProb : 0.5),
-    recSide: bm ? bm.recSide : (p ? p.recSide : "over")
+    mult: raw.mult || 1.0
   };
 }
 
@@ -7067,14 +7026,9 @@ function closeSettingsModal() {
   if (bd) bd.classList.remove("open");
 }
 
-function toggleEnabledBook(bookKey, forceRemove) {
+function toggleEnabledBook(bookKey) {
   const idx = state.enabledBooks.indexOf(bookKey);
   if (idx >= 0) {
-    // If the user tapped an enabled book that isn't currently active, switch to it immediately!
-    if (!forceRemove && state.book !== bookKey) {
-      selectBook(bookKey);
-      return;
-    }
     if (state.enabledBooks.length <= 1) {
       showToast("Keep at least 1 sportsbook enabled");
       return;
@@ -7082,20 +7036,14 @@ function toggleEnabledBook(bookKey, forceRemove) {
     state.enabledBooks.splice(idx, 1);
     if (state.book === bookKey) {
       selectBook(state.enabledBooks[0]);
-      return;
     }
   } else {
     state.enabledBooks.push(bookKey);
-    selectBook(bookKey);
-    return;
   }
   try {
     localStorage.setItem("zerovig_enabled_books", JSON.stringify(state.enabledBooks));
   } catch (e) {}
   renderSettingsModal();
-  if (typeof renderOnboardingModal === "function" && document.getElementById("onboardingModalBackdrop")?.classList.contains("open")) {
-    renderOnboardingModal();
-  }
   renderAll();
 }
 
@@ -7176,77 +7124,19 @@ window.logoutAdminProfile = function() {
 };
 
 const POPULAR_TEAMS_BY_SPORT = [
-  // NBA
   { team: "LAL", sport: "NBA", label: "Lakers" },
   { team: "BOS", sport: "NBA", label: "Celtics" },
   { team: "NYK", sport: "NBA", label: "Knicks" },
   { team: "GSW", sport: "NBA", label: "Warriors" },
   { team: "SAS", sport: "NBA", label: "Spurs" },
   { team: "DEN", sport: "NBA", label: "Nuggets" },
-  { team: "MIL", sport: "NBA", label: "Bucks" },
-  { team: "OKC", sport: "NBA", label: "Thunder" },
-  { team: "DAL", sport: "NBA", label: "Mavericks" },
-  { team: "PHX", sport: "NBA", label: "Suns" },
-  { team: "MIN", sport: "NBA", label: "Timberwolves" },
-  { team: "CLE", sport: "NBA", label: "Cavaliers" },
-  { team: "MIA", sport: "NBA", label: "Heat" },
-  { team: "PHI", sport: "NBA", label: "76ers" },
-  { team: "HOU", sport: "NBA", label: "Rockets" },
-  { team: "DET", sport: "NBA", label: "Pistons" },
-  { team: "BKN", sport: "NBA", label: "Nets" },
-  { team: "SAC", sport: "NBA", label: "Kings" },
-  // NHL
   { team: "COL", sport: "NHL", label: "Avalanche" },
   { team: "NJ",  sport: "NHL", label: "Devils" },
   { team: "TB",  sport: "NHL", label: "Lightning" },
-  { team: "EDM", sport: "NHL", label: "Oilers" },
-  { team: "TOR", sport: "NHL", label: "Maple Leafs" },
-  { team: "NYR", sport: "NHL", label: "Rangers" },
-  { team: "VGK", sport: "NHL", label: "Golden Knights" },
-  { team: "FLA", sport: "NHL", label: "Panthers" },
-  { team: "SEA", sport: "NHL", label: "Kraken" },
-  // MLB
   { team: "LAD", sport: "MLB", label: "Dodgers" },
   { team: "NYY", sport: "MLB", label: "Yankees" },
-  { team: "KC",  sport: "MLB", label: "Royals" },
-  { team: "NYM", sport: "MLB", label: "Mets" },
-  { team: "SD",  sport: "MLB", label: "Padres" },
-  { team: "ATL", sport: "MLB", label: "Braves" },
-  // NFL
-  { team: "BUF", sport: "NFL", label: "Bills" },
-  { team: "BAL", sport: "NFL", label: "Ravens" },
-  { team: "SF",  sport: "NFL", label: "49ers" },
-  { team: "GB",  sport: "NFL", label: "Packers" },
-  { team: "MIN", sport: "NFL", label: "Vikings" },
-  { team: "WAS", sport: "NFL", label: "Commanders" }
+  { team: "KC",  sport: "MLB", label: "Royals/KC" }
 ];
-
-const LEAGUE_META_ICONS = {
-  NBA: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M4.6 4.6c4.1 4.1 4.1 10.7 0 14.8"/><path d="M19.4 4.6c-4.1 4.1-4.1 10.7 0 14.8"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="12" y1="3" x2="12" y2="21"/></svg>`,
-  NHL: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="14" rx="8" ry="4"/><path d="M4 14v3c0 2.2 3.6 4 8 4s8-1.8 8-4v-3"/></svg>`,
-  MLB: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M6.5 5.2c2.5 3.8 2.5 9.8 0 13.6"/><path d="M17.5 5.2c-2.5 3.8-2.5 9.8 0 13.6"/></svg>`,
-  NFL: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.4 5.6c-3.9-3.9-10.2-2.2-13.4 1s-4.9 9.5-1 13.4 10.2 2.2 13.4-1 4.9-9.5 1-13.4z"/><line x1="9" y1="15" x2="15" y2="9"/><line x1="10" y1="11" x2="13" y2="14"/><line x1="11" y1="10" x2="14" y2="13"/></svg>`
-};
-
-window.renderTeamTileItem = function(item, favTmSet) {
-  const key = item.team;
-  const on = favTmSet.has(key);
-  const logoUrl = window.getTeamLogoUrl(item.sport, item.team);
-  const fbUrl = window.getTeamLogoFallback(item.team);
-  const brandStyle = window.getTeamBrandStyle ? window.getTeamBrandStyle(item.team) : "";
-  return `
-    <button type="button" class="zv-team-tile ${on ? 'on' : ''}" onclick="toggleFavTeam('${item.team}')">
-      <span class="zv-tile-badge-check">${on ? '✓' : ''}</span>
-      <div class="zv-team-logo-box" style="${brandStyle}">
-        <img src="${logoUrl}" alt="${item.team}" onerror="this.onerror=null;this.src='${fbUrl}';">
-      </div>
-      <div class="zv-team-meta">
-        <span class="zv-team-abbr">${item.team}</span>
-        <span class="zv-team-sub">${item.label} · ${item.sport}</span>
-      </div>
-    </button>
-  `;
-};
 
 window.toggleFavLeague = function(lg) {
   const arr = state.favoriteLeagues || [];
@@ -7293,7 +7183,7 @@ function renderOnboardingModal() {
   const bd = document.getElementById("zvOnboardBackdrop");
   if (!bd) return;
   const enabledSet = new Set(state.enabledBooks || []);
-  const favLgSet = new Set(state.favoriteLeagues && state.favoriteLeagues.length ? state.favoriteLeagues : ["NBA", "NHL", "MLB", "NFL"]);
+  const favLgSet = new Set(state.favoriteLeagues || []);
   const favTmSet = new Set(state.favoriteTeams || []);
   const topBooks = ["underdog", "prizepicks", "draftkings", "fanduel", "sleeper", "betmgm", "caesars", "espnbet", "betr"];
 
@@ -7313,19 +7203,20 @@ function renderOnboardingModal() {
 
   const leaguesHtml = ["NBA", "NHL", "MLB", "NFL"].map(lg => {
     const on = favLgSet.has(lg);
-    const svgIcon = LEAGUE_META_ICONS[lg] || "";
+    return `<button class="zv-ob-chip ${on ? 'on' : ''}" onclick="toggleFavLeague('${lg}')">${lg} ${on ? '✓' : '+'}</button>`;
+  }).join("");
+
+  const teamsHtml = POPULAR_TEAMS_BY_SPORT.map(item => {
+    const on = favTmSet.has(item.team);
+    const logoUrl = window.getTeamLogoUrl(item.sport, item.team);
     return `
-      <button type="button" class="zv-league-tile ${on ? 'on' : ''}" onclick="toggleFavLeague('${lg}')">
-        <span class="zv-tile-badge-check">${on ? '✓' : ''}</span>
-        <div class="zv-league-icon">${svgIcon}</div>
-        <span class="zv-league-name">${lg}</span>
+      <button class="zv-ob-chip ${on ? 'on' : ''}" onclick="toggleFavTeam('${item.team}')">
+        <img src="${logoUrl}" alt="${item.team}" style="width:16px;height:16px;object-fit:contain;" onerror="this.style.display='none'">
+        <span>${item.team}</span>
+        ${on ? '<span style="color:#00E676;">✓</span>' : ''}
       </button>
     `;
   }).join("");
-
-  const filteredTeams = POPULAR_TEAMS_BY_SPORT.filter(item => favLgSet.has(item.sport));
-  const teamsPool = filteredTeams.length > 0 ? filteredTeams : POPULAR_TEAMS_BY_SPORT;
-  const teamsHtml = teamsPool.map(item => window.renderTeamTileItem(item, favTmSet)).join("");
 
   bd.innerHTML = `
     <div class="zv-onboard-card" onclick="event.stopPropagation()">
@@ -7334,7 +7225,7 @@ function renderOnboardingModal() {
           <span style="font-size:9.5px;font-weight:900;color:#00E676;letter-spacing:0.08em;text-transform:uppercase;">10-SECOND PERSONALIZATION</span>
           <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:900;color:#FFFFFF;margin-top:2px;">Personalize Your ZeroVig Board</div>
         </div>
-        <button type="button" onclick="closeOnboardingModal()" style="background:#151A26;border:1px solid rgba(255,255,255,0.14);color:#9BA3B2;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:800;cursor:pointer;">Skip</button>
+        <button onclick="closeOnboardingModal()" style="background:#151A26;border:1px solid rgba(255,255,255,0.14);color:#9BA3B2;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:800;cursor:pointer;">Skip</button>
       </div>
 
       <div>
@@ -7344,18 +7235,15 @@ function renderOnboardingModal() {
 
       <div>
         <div style="font-size:10.5px;font-weight:900;color:#D5D9E0;text-transform:uppercase;margin-bottom:6px;">2. Favorite Leagues (Surfaced First)</div>
-        <div class="zv-league-grid">${leaguesHtml}</div>
+        <div class="zv-ob-chip-grid">${leaguesHtml}</div>
       </div>
 
       <div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-          <span style="font-size:10.5px;font-weight:900;color:#D5D9E0;text-transform:uppercase;">3. Favorite Teams (Pinned to Top of Board)</span>
-          <span style="font-size:9.5px;font-weight:800;color:#00E676;">${favTmSet.size} Selected</span>
-        </div>
-        <div class="zv-team-grid">${teamsHtml}</div>
+        <div style="font-size:10.5px;font-weight:900;color:#D5D9E0;text-transform:uppercase;margin-bottom:6px;">3. Favorite Teams (Pinned to Top of Board)</div>
+        <div class="zv-ob-chip-grid">${teamsHtml}</div>
       </div>
 
-      <button type="button" onclick="closeOnboardingModal()" style="width:100%;height:44px;border-radius:11px;border:none;background:#00E676;color:#04120A;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:900;letter-spacing:0.03em;text-transform:uppercase;cursor:pointer;margin-top:4px;">
+      <button onclick="closeOnboardingModal()" style="width:100%;height:44px;border-radius:11px;border:none;background:#00E676;color:#04120A;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:900;letter-spacing:0.03em;text-transform:uppercase;cursor:pointer;margin-top:4px;">
         Launch My Personalized Board →
       </button>
     </div>
@@ -7402,7 +7290,17 @@ function renderSettingsModal() {
     </form>
   `;
 
-  const favTeamsHtml = POPULAR_TEAMS_BY_SPORT.map(item => window.renderTeamTileItem(item, favTmSet)).join("");
+  const favTeamsHtml = POPULAR_TEAMS_BY_SPORT.map(item => {
+    const on = favTmSet.has(item.team);
+    const logoUrl = window.getTeamLogoUrl(item.sport, item.team);
+    return `
+      <button class="zv-ob-chip ${on ? 'on' : ''}" onclick="toggleFavTeam('${item.team}')">
+        <img src="${logoUrl}" alt="${item.team}" style="width:15px;height:15px;object-fit:contain;" onerror="this.style.display='none'">
+        <span>${item.team}</span>
+        ${on ? '<span style="color:#00E676;">✓</span>' : ''}
+      </button>
+    `;
+  }).join("");
 
   let html = adminSectionHtml + `
     <div style="display:flex;align-items:center;justify-content:space-between;background:#101622;border:1px solid rgba(0,230,118,0.3);border-radius:11px;padding:9px 11px;margin-bottom:6px;">
@@ -7450,11 +7348,6 @@ function selectBook(bookKey) {
   if (!state.enabledBooks.includes(bookKey)) {
     state.enabledBooks.push(bookKey);
   }
-  try {
-    localStorage.setItem("zerovig_active_book", bookKey);
-    localStorage.setItem("zerovig_enabled_books", JSON.stringify(state.enabledBooks));
-  } catch (e) {}
-
   const meta = BOOKS_META[bookKey];
   const logoEl = document.getElementById("activeBookLogo");
   const labelEl = document.getElementById("activeBookLabel");
@@ -7462,30 +7355,37 @@ function selectBook(bookKey) {
   if (labelEl) labelEl.textContent = meta.name;
   closeBookModal();
 
-  // Trigger Cushion Slider spring animation from 50% -> new book's Over/Under split
-  document.body.classList.add("zv-book-calibrating", "zv-book-switching");
+  // Trigger dopamine book-sync pulse banner + slider spring animation
+  const bkPool = getBookOfferPool(bookKey);
+  const bkLines = bkPool.length;
+  const cleanCount = bkPool.filter(p => !p.isTrap).length;
+  const syncBanner = document.getElementById("bookSyncBanner");
+  if (syncBanner) {
+    const logoSrc = window.getBookLogo(bookKey, meta.abbr);
+    syncBanner.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;">
+        <img src="${logoSrc}" alt="${meta.name}" style="width:20px;height:20px;border-radius:5px;">
+        <span>Syncing <strong>${meta.name}</strong> vs 20-Book Consensus...</span>
+      </div>
+      <span style="color:#00E676;font-family:'Space Grotesk',monospace;font-size:10.5px;font-weight:900;">${bkLines.toLocaleString()} LIVE LINES ✓</span>
+    `;
+    syncBanner.classList.add("active");
+  }
 
-  // Re-render all views with the newly active sportsbook
+  document.body.classList.remove("zv-book-switching");
+  void document.body.offsetWidth;
+  document.body.classList.add("zv-book-switching");
+
+  renderFilterStrips();
   renderAll();
-  if (document.getElementById("settingsModalBackdrop")?.classList.contains("open")) {
-    renderSettingsModal();
-  }
-  if (document.getElementById("onboardingModalBackdrop")?.classList.contains("open")) {
-    renderOnboardingModal();
-  }
 
-  // Smoothly scroll the newly active sportsbook tile into view in the top row
-  requestAnimationFrame(() => {
-    const activeTile = document.querySelector('#topBookScrollRow .zv-book-tile.active');
-    if (activeTile && typeof activeTile.scrollIntoView === "function") {
-      try {
-        activeTile.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-      } catch (e) {}
-    }
-    setTimeout(() => {
-      document.body.classList.remove("zv-book-calibrating", "zv-book-switching");
-    }, 45);
-  });
+  if (window.zvBookSyncTimer) clearTimeout(window.zvBookSyncTimer);
+  window.zvBookSyncTimer = setTimeout(() => {
+    document.body.classList.remove("zv-book-switching");
+    if (syncBanner) syncBanner.classList.remove("active");
+  }, 1150);
+
+  showToast(`✓ ${meta.name} Live · ${bkLines.toLocaleString()} Props (${cleanCount} Clean Edges)`);
 }
 
 function switchTab(tabName) {
@@ -8057,10 +7957,10 @@ function renderStatBlockForProp(sp, isPrimary) {
   const isAltSel = sel && sel.altIdx !== null && sp.alts && sp.alts[sel.altIdx];
 
   const dispLine = isAltSel ? sp.alts[sel.altIdx].line : bk.line;
-  const baseMult = typeof bk.mult === "number" ? bk.mult : (typeof sp.mult === "number" ? sp.mult : 1.0);
+  const baseMult = typeof sp.mult === "number" ? sp.mult : 1.0;
   const dispMult = isAltSel
     ? ` · ${sp.alts[sel.altIdx].mult.toFixed(2)}x`
-    : (bk.priceBadge ? ` · ${bk.priceBadge}` : (Math.abs(baseMult - 1.0) >= 0.03 ? ` · ${baseMult.toFixed(2)}x` : ""));
+    : (Math.abs(baseMult - 1.0) >= 0.03 ? ` · ${baseMult.toFixed(2)}x` : "");
   const trueVal = getTrueLine(sp, bk);
   const { oPct, uPct } = getPropOuPcts(sp);
   const activeOverPct = isAltSel ? Math.round(getAltProb(sp.alts[sel.altIdx]) * 100) : oPct;
@@ -8113,7 +8013,7 @@ function renderStatBlockForProp(sp, isPrimary) {
       <div class="s-hdr">
         <span class="s-lbl">${sp.stat}${dispMult}</span>
         <div class="s-vals">
-          <span class="v-book">${bk.abbr || "Book"} ${dispLine}</span>
+          <span class="v-book">Book ${dispLine}</span>
           <span class="${trueClass}" onclick="toggleCardAlts('${sp.id}', event)">True ${trueVal} ${arrowChar}</span>
         </div>
       </div>
@@ -8197,12 +8097,10 @@ function renderBoard() {
         const aPre = a.preLineupCandidate ? 1 : 0;
         const bPre = b.preLineupCandidate ? 1 : 0;
         if (aPre !== bPre) return bPre - aPre;
-        const bma = window.getBookSpecificPropMetrics ? window.getBookSpecificPropMetrics(a, state.book, state.engine) : null;
-        const bmb = window.getBookSpecificPropMetrics ? window.getBookSpecificPropMetrics(b, state.book, state.engine) : null;
-        const aEdge = bma ? bma.edge : (typeof a.edge === "number" ? a.edge : -99);
-        const bEdge = bmb ? bmb.edge : (typeof b.edge === "number" ? b.edge : -99);
+        const aEdge = typeof a.edge === "number" ? a.edge : -99;
+        const bEdge = typeof b.edge === "number" ? b.edge : -99;
         if (Math.abs(bEdge - aEdge) > 1e-6) return bEdge - aEdge;
-        return (bmb ? bmb.bestProb : (b.bestProb || 0)) - (bma ? bma.bestProb : (a.bestProb || 0));
+        return (b.bestProb || 0) - (a.bestProb || 0);
       });
       seenPlayers[pk] = {
         playerKey: pk,
@@ -8241,12 +8139,13 @@ function renderBoard() {
     const aStd = ((a.mult || 1) >= 0.92 && (a.mult || 1) <= 1.03) ? 1 : 0;
     const bStd = ((b.mult || 1) >= 0.92 && (b.mult || 1) <= 1.03) ? 1 : 0;
     if (aStd !== bStd) return bStd - aStd;
-    const bma = window.getBookSpecificPropMetrics ? window.getBookSpecificPropMetrics(a, state.book, state.engine) : null;
-    const bmb = window.getBookSpecificPropMetrics ? window.getBookSpecificPropMetrics(b, state.book, state.engine) : null;
-    const aScore = (bma ? bma.edge : (a.edge || 0)) + ((bma ? bma.bestProb : (a.bestProb || 0.5)) * 25);
-    const bScore = (bmb ? bmb.edge : (b.edge || 0)) + ((bmb ? bmb.bestProb : (b.bestProb || 0.5)) * 25);
-    if (Math.abs(bScore - aScore) > 0.05) return bScore - aScore;
-    return (_zvHashStr(String(a.id) + "::" + state.book) % 97) - (_zvHashStr(String(b.id) + "::" + state.book) % 97);
+    const aProb = a.bestProb || 0;
+    const bProb = b.bestProb || 0;
+    if (aPre && bPre && Math.abs(bProb - aProb) > 1e-6) return bProb - aProb;
+    const aEdge = typeof a.edge === "number" ? a.edge : -99;
+    const bEdge = typeof b.edge === "number" ? b.edge : -99;
+    if (Math.abs(bEdge - aEdge) > 1e-6) return bEdge - aEdge;
+    return (b.bestProb || 0) - (a.bestProb || 0);
   });
 
   const limit = state.boardLimit || 48;
@@ -8339,12 +8238,15 @@ function renderBoard() {
     const statusTagHtml = p.lineupConfirmed
       ? `<span class="zv-status-tag confirmed">LINEUPS CONFIRMED</span>`
       : `<span class="zv-status-tag unconfirmed">LINEUPS UNCONFIRMED</span>`;
+    const isFavTeamPlayer = favTeamSet.has(String(p.sport + ":" + p.team).toUpperCase()) || favTeamSet.has(String(p.team).toUpperCase());
+    const favTagHtml = isFavTeamPlayer ? `<span class="zv-fav-star-badge">★ MY TEAM</span>` : "";
     const lineupHtml = `
-      <span class="zv-player-sub" style="flex-wrap:wrap;gap:4px;">
+      <span class="zv-player-sub">
         ${window.renderTeamBadge(p.sport, mInfo.away)}
         <span style="font-size:9px;font-weight:900;color:#636B78;">@</span>
         ${window.renderTeamBadge(p.sport, mInfo.home)}
         ${statusTagHtml}
+        ${favTagHtml}
       </span>
     `;
 
@@ -8366,15 +8268,14 @@ function renderBoard() {
         <div class="p-head">
           <div class="p-left" onclick="if(${extraCount} > 0) togglePlayerExpand('${pk}', event)" style="${extraCount > 0 ? 'cursor:pointer;' : ''}">
             <div class="p-av">
-              <img src="${p.avatar || fallbackUri}" alt="${p.name}"  onerror="this.onerror=null;this.src=window.getAvatarFallback('${p.name.replace(/'/g, "\'")}');">
+              <img src="${p.avatar || fallbackUri}" alt="${p.name}" loading="lazy" onerror="this.onerror=null;this.src=window.getAvatarFallback('${p.name.replace(/'/g, "\'")}');">
             </div>
-            <div style="min-width:0;">
-              <div class="p-nm" title="${p.fullName || p.name}">${p.fullName || p.name}</div>
+            <div class="p-info-col">
+              <div class="p-nm">${p.fullName || p.name}</div>
               <div class="p-gm">${lineupHtml}</div>
             </div>
           </div>
           <div class="p-right-badges">
-            ${(favTeamSet.has(String(p.sport + ":" + p.team).toUpperCase()) || favTeamSet.has(String(p.team).toUpperCase())) ? `<span class="zv-fav-star-badge">★ MY TEAM</span>` : ""}
             <span class="${badgeClass}">${badgeText}</span>
             ${moreStatsBtn}
           </div>
@@ -8587,7 +8488,7 @@ function renderFloatingCapsule() {
           ${renderEmptySlotIcons()}
           <div class="zv-pd-info">
             <div class="zv-pd-top"><span style="color:#00E676;">MY SLIP (0 PICKS)</span> · ${bookMeta.name}</div>
-            <div class="zv-pd-sub">Tap Over/Under on any live player to add picks</div>
+            <div class="zv-pd-sub">Tap Over / Under to add picks</div>
           </div>
         </div>
         <button class="zv-pd-cta">Auto-Build →</button>
@@ -9654,15 +9555,13 @@ function renderTopBookBar() {
   const bar = document.getElementById("topBookSwitcherBar");
   if (!bar) return;
   const enabledList = (state.enabledBooks && state.enabledBooks.length) ? state.enabledBooks : ["underdog", "prizepicks", "draftkings", "fanduel"];
-  const prevScroll = document.getElementById("topBookScrollRow") ? document.getElementById("topBookScrollRow").scrollLeft : 0;
-
   const tilesHtml = enabledList.map(k => {
     const m = BOOKS_META[k];
     if (!m) return "";
     const isActive = state.book === k;
     const logoSrc = window.getBookLogo(k, m.abbr);
     return `
-      <button type="button" class="zv-book-tile ${isActive ? "active" : ""}" data-book-key="${k}" onclick="selectBook('${k}')">
+      <button class="zv-book-tile ${isActive ? "active" : ""}" onclick="selectBook('${k}')">
         ${isActive ? '<span class="zv-tile-check">✓</span>' : ""}
         <div class="zv-tile-logo-box">
           <img src="${logoSrc}" alt="${m.name}">
@@ -9672,29 +9571,22 @@ function renderTopBookBar() {
     `;
   }).join("");
 
-  const searchDrawer = document.getElementById("searchDrawer");
-  const searchOpen = searchDrawer && searchDrawer.style.display !== "none";
-
+  const searchOpen = document.getElementById("searchDrawer") && document.getElementById("searchDrawer").classList.contains("open");
   bar.innerHTML = `
-    <div class="zv-book-row-scroll" id="topBookScrollRow">
+    <div class="zv-book-tile-grid" id="topBookScrollRow">
       ${tilesHtml}
     </div>
     <div class="zv-book-pinned-actions">
-      <button type="button" class="zv-pinned-util-btn ${searchOpen ? "active" : ""}" onclick="toggleSearchDrawer()" title="Search player, team, or stat">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <span class="zv-pinned-util-lbl">Search</span>
+      <button class="zv-pinned-util-btn ${searchOpen ? 'active' : ''}" id="pinnedSearchBtn" onclick="toggleSearch()" title="Search player, team, or stat">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span>SEARCH</span>
       </button>
-      <button type="button" class="zv-pinned-util-btn" onclick="openSettingsModal()" title="My Sportsbooks & Settings">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        <span class="zv-pinned-util-lbl">Settings</span>
+      <button class="zv-pinned-util-btn" id="pinnedSettingsBtn" onclick="openSettingsModal(event)" title="My Sportsbooks, Favorite Teams &amp; Settings">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>SETTINGS</span>
       </button>
     </div>
   `;
-
-  const newScrollRow = document.getElementById("topBookScrollRow");
-  if (newScrollRow && prevScroll > 0) {
-    newScrollRow.scrollLeft = prevScroll;
-  }
 }
 
 function renderAll() {
@@ -9742,7 +9634,7 @@ window.addEventListener("DOMContentLoaded", () => {
   fetchLiveFeed(false);
 
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./service-worker.js?v=25.2").catch(() => {});
+    navigator.serviceWorker.register("./service-worker.js?v=23.2").catch(() => {});
   }
 });
 </script>
