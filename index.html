@@ -3788,10 +3788,6 @@
             <span id="liveFeedStatusText"><strong style="color:#00E676;">Live Odds</strong> · 20 Apps Synced</span>
           </div>
           <div style="display:inline-flex;align-items:center;gap:5px;flex-shrink:0;">
-            <div class="engine-pill" id="engineToggleBtn" onclick="toggleEngine()" title="Switch PRO vs STD" style="transform:scale(0.92);">
-              <span class="eng-seg active" id="engSegPro">PRO</span>
-              <span class="eng-seg" id="engSegStd">STD</span>
-            </div>
             <div class="book-dropdown" id="bookDropdownBtn" onclick="openBookModal(event)" style="height:24px;padding:0 6px;">
               <img id="activeBookLogo" src="" alt="Book" style="width:13px;height:13px;border-radius:3px;object-fit:cover;">
               <span class="book-label" id="activeBookLabel" style="font-size:10px;">Underdog</span>
@@ -4875,7 +4871,22 @@ function renderSettingsModal() {
   const mount = document.getElementById("settingsBooksMount");
   if (!mount) return;
   const enabledSet = new Set(state.enabledBooks);
-  let html = "";
+  const isPro = state.engine === "pro";
+  let html = `
+    <div style="background:#0E121B;border:1px solid rgba(0,230,118,0.28);border-radius:10px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+      <div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:9px;font-weight:900;letter-spacing:0.06em;text-transform:uppercase;padding:2px 6px;border-radius:4px;background:rgba(0,230,118,0.16);color:#00E676;border:1px solid rgba(0,230,118,0.35);">ADMIN ONLY</span>
+          <span style="font-size:12px;font-weight:900;color:#F4F6FA;">Tier Preview Toggle</span>
+        </div>
+        <div style="font-size:10px;color:#9BA3B2;margin-top:3px;">Hidden from production users · Admin profile override</div>
+      </div>
+      <div class="engine-pill" id="engineToggleBtn" onclick="toggleEngine()" title="Admin Tier Override: PRO vs STD" style="height:28px;padding:2px;flex-shrink:0;">
+        <span class="eng-seg ${isPro ? "active" : ""}" id="engSegPro" style="padding:0 8px;font-size:10px;font-weight:900;">PRO</span>
+        <span class="eng-seg ${!isPro ? "active" : ""}" id="engSegStd" style="padding:0 8px;font-size:10px;font-weight:900;">STD</span>
+      </div>
+    </div>
+  `;
   BOOK_CATEGORIES.forEach(cat => {
     html += `<div style="font-size:10px;font-weight:800;color:#9BA3B2;letter-spacing:0.06em;text-transform:uppercase;margin-top:4px;">${cat.title}</div>`;
     cat.books.forEach(k => {
@@ -6945,9 +6956,7 @@ function renderAutoBuildView() {
 
         <div class="zv-standby-card amber-lock" id="autoBuildLockedVault">
           <div style="display:flex;align-items:center;gap:12px;width:100%;text-align:left;">
-            <div class="zv-crest-ring" style="flex-shrink:0;">
-              ${SVG_ZV_MARK_LARGE}
-            </div>
+
             <div style="min-width:0;flex:1;">
               <span class="zv-lock-pill" style="display:inline-block;margin-bottom:5px;">LINEUPS UNCONFIRMED</span>
               <div style="font-family:'Space Grotesk','Inter',sans-serif;font-size:16px;font-weight:900;color:#FFFFFF;letter-spacing:-0.02em;text-transform:uppercase;line-height:1.15;">
@@ -7096,9 +7105,7 @@ function renderAutoBuildView() {
 
     const consoleBodyHtml = isScanning ? `
       <div class="zv-standby-card" id="autoBuildScanningConsole">
-        <div class="zv-crest-ring" style="animation-duration:0.9s;">
-          ${SVG_ZV_MARK_LARGE}
-        </div>
+
         <span class="zv-lock-pill ready">SORTING ${bookPool.length.toLocaleString()} LIVE ${bookMeta.name.toUpperCase()} LINES... ${state.autoBuildScanPct}%</span>
         <div style="font-size:15px;font-weight:900;color:#F4F6FA;">Building Optimal ${requiredLegs}-Pick Ticket...</div>
         <div class="zv-scan-progress-track">
@@ -7124,9 +7131,7 @@ function renderAutoBuildView() {
       </div>
     ` : `
       <div class="zv-standby-card" id="autoBuildStandbyConsole">
-        <div class="zv-crest-ring">
-          ${SVG_ZV_MARK_LARGE}
-        </div>
+
         <span class="zv-lock-pill ready">ZEROVIG QUANT ENGINE STANDBY</span>
         <div style="font-size:16px;font-weight:900;color:#F4F6FA;letter-spacing:-0.02em;">
           Ready to Build Your ${requiredLegs}-Pick ${bookMeta.name} Ticket
