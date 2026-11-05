@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zerovig-pwa-v26.6';
+const CACHE_NAME = 'zerovig-pwa-v26.7';
 const ASSETS = [
   '/',
   '/index.html',

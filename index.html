@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="zerovig-version" content="v26.6">
+<meta name="zerovig-version" content="v26.7">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <title>ZeroVig — See the Odds. Find the Edge.</title>
@@ -10792,5 +10792,203 @@ window.addEventListener("DOMContentLoaded", () => {
 })();
 </script>
 <!-- ZV_V26_6_END -->
+<!-- ZV_V26_7_BEGIN -->
+<style>
+/* ZeroVig v26.7 (2026-11-05): iPhone layout — book-row fade+scroll, dock/nav bottom padding, 100dvh + safe areas */
+html, body {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+  overscroll-behavior: none !important;
+}
+.iphone, #appRoot {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+}
+@media (max-width: 540px) {
+  .iphone, #appRoot {
+    width: 100% !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    max-height: 100dvh !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding-top: env(safe-area-inset-top, 0px) !important;
+    padding-bottom: 0 !important;
+  }
+}
+
+/* Book switcher: scrollable tiles + pinned Search/Settings, intentional right fade */
+#topBookSwitcherBar.zv-book-switcher-bar,
+#topBookSwitcherBar {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 0 !important;
+  padding: 6px 10px 8px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  position: relative !important;
+  background: #06080D !important;
+}
+#topBookScrollRow,
+#topBookSwitcherBar .zv-book-tile-grid {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 6px !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-x !important;
+  scroll-snap-type: x proximity !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  padding: 2px 18px 2px 2px !important; /* trailing pad so last tile can clear the fade */
+  margin: 0 !important;
+  scrollbar-width: none !important;
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 calc(100% - 22px), transparent 100%) !important;
+  mask-image: linear-gradient(to right, #000 0%, #000 calc(100% - 22px), transparent 100%) !important;
+}
+#topBookScrollRow::-webkit-scrollbar,
+#topBookSwitcherBar .zv-book-tile-grid::-webkit-scrollbar { display: none !important; height: 0 !important; }
+#topBookSwitcherBar .zv-book-tile {
+  flex: 0 0 auto !important;
+  scroll-snap-align: start !important;
+  min-width: 58px !important;
+  width: 58px !important;
+  max-width: 62px !important;
+  height: 52px !important;
+  box-sizing: border-box !important;
+}
+@media (min-width: 402px) {
+  #topBookSwitcherBar .zv-book-tile {
+    min-width: 62px !important;
+    width: 62px !important;
+    max-width: 66px !important;
+    height: 54px !important;
+  }
+}
+#topBookSwitcherBar .zv-book-pinned-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  flex: 0 0 auto !important;
+  flex-shrink: 0 !important;
+  margin-left: 4px !important;
+  padding-left: 8px !important;
+  border-left: 1px solid rgba(255,255,255,0.12) !important;
+  background: #06080D !important;
+  position: relative !important;
+  z-index: 6 !important;
+  box-shadow: -14px 0 16px 8px #06080D !important; /* soft occlude behind pinned cluster */
+}
+#topBookSwitcherBar .zv-pinned-util-btn {
+  width: 46px !important;
+  min-width: 46px !important;
+  max-width: 46px !important;
+  height: 52px !important;
+  border-radius: 12px !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Bottom padding = dock + gap + nav + bottom-area pads + safe-area so slate isn't under the dock */
+:root {
+  --zv-dock-h: 60px;
+  --zv-nav-h: 62px;
+  --zv-dock-gap: 14px;
+  --zv-bottom-pad: 20px;
+}
+.scroll-view, #mainScroll {
+  flex: 1 1 0% !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding-bottom: calc(var(--zv-dock-h) + var(--zv-dock-gap) + var(--zv-nav-h) + var(--zv-bottom-pad) + env(safe-area-inset-bottom, 0px) + 24px) !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+.bottom-area, #bottomDock {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  z-index: 160 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--zv-dock-gap) !important;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+  box-sizing: border-box !important;
+  pointer-events: none !important;
+  background: linear-gradient(180deg, rgba(4,5,7,0) 0%, rgba(4,5,7,0.92) 22%, #040507 48%, #040507 100%) !important;
+}
+.bottom-area > *, #bottomDock > * { pointer-events: auto !important; }
+.zv-picks-dock { order: 0 !important; }
+.tab-bar { order: 1 !important; min-height: var(--zv-nav-h) !important; height: auto !important; }
+
+/* Keep content from clipping on the right at any phone width */
+#tabView-board, #tabView-audit, #tabView-autobuild, #tabView-settings,
+.scroll-view > * {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+}
+</style>
+<script>
+/* ZeroVig v26.7 layout + version bump */
+(function(){
+  window.ZV_VERSION = "v26.7";
+  try {
+    var meta = document.querySelector('meta[name="zerovig-version"]');
+    if (meta) meta.setAttribute("content", "v26.7");
+  } catch(e){}
+  function measureBottomStack(){
+    try {
+      var dock = document.querySelector(".zv-picks-dock");
+      var nav = document.querySelector(".tab-bar");
+      var area = document.getElementById("bottomDock") || document.querySelector(".bottom-area");
+      var root = document.documentElement;
+      if (dock) root.style.setProperty("--zv-dock-h", Math.ceil(dock.getBoundingClientRect().height) + "px");
+      if (nav) root.style.setProperty("--zv-nav-h", Math.ceil(nav.getBoundingClientRect().height) + "px");
+      if (area) {
+        var cs = getComputedStyle(area);
+        var pad = (parseFloat(cs.paddingTop)||0) + (parseFloat(cs.paddingBottom)||0);
+        root.style.setProperty("--zv-bottom-pad", Math.ceil(pad) + "px");
+      }
+    } catch(e){}
+  }
+  function boot(){
+    measureBottomStack();
+    window.addEventListener("resize", measureBottomStack);
+    window.addEventListener("orientationchange", measureBottomStack);
+    // Remeasure after dock re-renders
+    var mount = document.getElementById("floatingCapsuleMount");
+    if (mount && window.MutationObserver) {
+      new MutationObserver(function(){ measureBottomStack(); }).observe(mount, {childList:true, subtree:true, characterData:true});
+    }
+    setTimeout(measureBottomStack, 300);
+    setTimeout(measureBottomStack, 1200);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
+})();
+</script>
+<!-- ZV_V26_7_END -->
+
 </body>
 </html>
