@@ -1,14 +1,14 @@
-const CACHE_NAME = 'zerovig-pwa-v26.7';
+const CACHE_NAME = 'zerovig-pwa-v26.8';
 const ASSETS = [
   '/',
   '/index.html',
   '/live_feed.json',
-  '/manifest.json?v=8',
-  '/icons/favicon.svg?v=8',
-  '/icons/favicon-32.png?v=8',
-  '/icons/apple-touch-icon.png?v=8',
-  '/icons/icon-192.png?v=8',
-  '/icons/icon-512.png?v=8'
+  '/manifest.json?v=26',
+  '/icons/favicon.svg?v=26',
+  '/icons/favicon-32.png?v=26',
+  '/icons/apple-touch-icon.png?v=26',
+  '/icons/icon-192.png?v=26',
+  '/icons/icon-512.png?v=26'
 ];
 
 self.addEventListener('install', event => {

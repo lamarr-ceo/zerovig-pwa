@@ -1,23 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="zerovig-version" content="v26.7">
+<meta name="zerovig-version" content="v26.8">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-  <title>ZeroVig — See the Odds. Find the Edge.</title>
+  <script>
+/* ZeroVig v26.8 bootstrap: classify standalone vs browser before first paint */
+(function(){
+  function isStandalone(){
+    try {
+      if (window.navigator && window.navigator.standalone === true) return true;
+      if (window.matchMedia) {
+        if (window.matchMedia('(display-mode: standalone)').matches) return true;
+        if (window.matchMedia('(display-mode: fullscreen)').matches) return true;
+      }
+    } catch (e) {}
+    return false;
+  }
+  var on = isStandalone();
+  var root = document.documentElement;
+  root.classList.toggle('is-standalone', on);
+  root.classList.toggle('is-browser', !on);
+  root.dataset.displayMode = on ? 'standalone' : 'browser';
+  try {
+    if (window.matchMedia) {
+      ['standalone','fullscreen'].forEach(function(mode){
+        var mq = window.matchMedia('(display-mode: ' + mode + ')');
+        function sync(){
+          var now = isStandalone();
+          root.classList.toggle('is-standalone', now);
+          root.classList.toggle('is-browser', !now);
+          root.dataset.displayMode = now ? 'standalone' : 'browser';
+        }
+        if (mq.addEventListener) mq.addEventListener('change', sync);
+        else if (mq.addListener) mq.addListener(sync);
+      });
+    }
+  } catch (e) {}
+})();
+</script>
+<title>ZeroVig — See the Odds. Find the Edge.</title>
   <meta name="description" content="Plain-English sportsbook line comparisons, win chances, and 1-tap slip checks across 20 betting apps." />
   <link rel="canonical" href="https://zerovig.app/" />
-  <link rel="manifest" href="/manifest.json?v=24" />
+  <link rel="manifest" href="/manifest.json?v=26" />
   <meta name="theme-color" content="#0B0F0E" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="ZeroVig" />
-  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg?v=24" />
-  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png?v=24" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png?v=24" />
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg?v=26" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png?v=26" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png?v=26" />
   <meta property="og:title" content="ZeroVig — See the Odds. Find the Edge." />
   <meta property="og:description" content="Plain-English sportsbook line comparisons, win chances, and 1-tap slip checks across 20 betting apps." />
-  <meta property="og:image" content="https://zerovig.app/icons/og-card.png?v=24" />
+  <meta property="og:image" content="https://zerovig.app/icons/og-card.png?v=26" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@500;600;700;800;900&family=Space+Grotesk:wght@600;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
@@ -1350,7 +1385,6 @@
   }
   .toast-banner.show { display: flex; }
 
-
   /* BOARD MODE BAR & PRO PICKS GATE BANNER */
   .board-mode-bar {
     display: flex;
@@ -1432,7 +1466,6 @@
     display: flex;
   }
 
-
   .pick-spark-tag {
     display: inline-flex;
     align-items: center;
@@ -1462,7 +1495,6 @@
   .pro-gate-banner.open {
     display: flex;
   }
-
 
   /* UNDERDOG-STYLE GROUPED EXPANDABLE PLAYER CARDS (v10) */
   .player-stat-pills {
@@ -1559,7 +1591,6 @@
     border-color: #FF453A;
     color: #FF6961;
   }
-
 
   /* UNDERDOG-STYLE EXPANDABLE PLAYER CARDS */
   .prop-card.player-expanded {
@@ -1791,7 +1822,6 @@
     border-color: rgba(0, 230, 118, 0.45);
     background: rgba(0, 230, 118, 0.10);
   }
-
 
   /* v11 PURPOSE-BUILT TRUE LINE & HIT % PILLS */
   .true-pill {
@@ -4173,7 +4203,6 @@
   }
   /* === END ZEROVIG v23.1 === */
 
-
   /* === ZEROVIG v23 PINNED MOBILE NAV + ICONS + HEADSHOT PICKS BAR + CLEAN X-RAY === */
   /* 1. Lock viewport height and pin bottom dock on all mobile screens (zero scroll-to-find-nav bugs) */
   html, body {
@@ -4554,7 +4583,6 @@
   }
   /* === END ZEROVIG v23.1 === */
 
-
   /* === ZEROVIG v23.2 UNIVERSAL PHONE VIEWPORT PIN + 18PX DOCK GAP + 66PX ICON NAV === */
   .bottom-area, #bottomDock {
     gap: 18px !important;
@@ -4622,7 +4650,6 @@
     }
   }
   /* === END ZEROVIG v23.2 === */
-
 
   
 
@@ -4875,7 +4902,6 @@
     border-color: #00E676 !important;
     box-shadow: 0 0 8px rgba(0, 230, 118, 0.6) !important;
   }
-
 
   
   /* === ZEROVIG v25: SINGLE-ROW BOOK PICKER, ALWAYS-VISIBLE SEARCH & SETTINGS, DOPAMINE SLIDER ANIMATION, 10S ONBOARDING === */
@@ -5233,14 +5259,12 @@
   }
   /* === END ZEROVIG v25 === */
 
-
   /* === ZEROVIG v25.1 EMPTY SLOT STACK & PINNED RIGHT DOCK === */
   .zv-empty-slot-stack {
     display: flex !important;
     align-items: center !important;
     flex-shrink: 0 !important;
   }
-
 
   /* === v25.2 ICON, WHITE-BOX, & ONBOARDING TEAM/LEAGUE TILE FIX === */
   .zv-book-pinned-actions button,
@@ -5536,7 +5560,6 @@
     outline: none !important;
   }
 
-
   
   /* === v25.3: BULLETPROOF MOBILE & DESKTOP SPORTSBOOK SWITCHER + PER-BOOK BOARD === */
   #topBookSwitcherBar,
@@ -5819,7 +5842,6 @@
     text-overflow: clip !important;
     line-height: 1.15 !important;
   }
-
 
   /* === v25.5: RANDOMIZED PULSATING RECOMMENDED PICK BUTTON + CLEAR CUSHION GUIDANCE === */
   @keyframes zvRecBtnPulse {
@@ -6138,7 +6160,6 @@
     transition: none !important;
   }
 
-
   /* === ZEROVIG V26.1 MOBILE TOUCH & PULL-TO-REFRESH & NO GREEN BANNER === */
   #bookSyncBanner, .zv-book-sync-banner, #bookSyncHud, .zv-book-sync-hud, .zv-loading-header-bar {
     display: none !important;
@@ -6253,7 +6274,6 @@
     to { transform: rotate(360deg); }
   }
 
-
   .zv-mb-date {
     width: 100%;
     text-align: center;
@@ -6321,9 +6341,6 @@
       </div>
     </div>
     <div class="zv-onboard-backdrop" id="zvOnboardBackdrop"></div>
-
-
-
 
     <div class="search-drawer" id="searchDrawer">
       <div class="zv-search-wrap">
@@ -7180,7 +7197,6 @@ window.triggerGenerateTicketNow = function(targetKey) {
     }
   }, 135);
 };
-
 
 function getProp(id) {
   return PROPS.find(p => p.id === id);
@@ -10322,8 +10338,6 @@ function renderAutoBuildView() {
 
       ${riskBannerHtml}
 
-
-
       ${sizePickerHtml}
 
       ${renderAutoBuildSlipCard(primaryCardSpec, stake, 0)}
@@ -10359,8 +10373,6 @@ function showToast(msg) {
     t.classList.remove("show");
   }, 2600);
 }
-
-
 
 function renderTopBookBar() {
   const bar = document.getElementById("topBookSwitcherBar");
@@ -10618,7 +10630,7 @@ window.addEventListener("DOMContentLoaded", () => {
       refreshingSw = true;
       window.location.reload();
     });
-    navigator.serviceWorker.register("./service-worker.js?v=26.4").then(reg => {
+    navigator.serviceWorker.register("./service-worker.js?v=26.8").then(reg => {
       try { reg.update(); } catch (e) {}
     }).catch(() => {});
   }
@@ -10792,34 +10804,80 @@ window.addEventListener("DOMContentLoaded", () => {
 })();
 </script>
 <!-- ZV_V26_6_END -->
-<!-- ZV_V26_7_BEGIN -->
+
+<!-- ZV_V26_8_BEGIN -->
 <style>
-/* ZeroVig v26.7 (2026-11-05): iPhone layout — book-row fade+scroll, dock/nav bottom padding, 100dvh + safe areas */
+/* ZeroVig v26.8 (2026-11-05): standalone PWA vs Safari browser layout modes */
+:root {
+  --zv-dock-h: 60px;
+  --zv-nav-h: 62px;
+  --zv-dock-gap: 14px;
+  --zv-bottom-pad: 20px;
+  --zv-safe-top: 0px;
+  --zv-safe-bottom: 0px;
+  --zv-app-h: 100dvh;
+  --zv-vv-offset-top: 0px;
+}
+
 html, body {
   width: 100% !important;
   max-width: 100% !important;
   overflow-x: hidden !important;
   overflow-y: hidden !important;
-  height: 100dvh !important;
-  max-height: 100dvh !important;
+  height: var(--zv-app-h) !important;
+  max-height: var(--zv-app-h) !important;
+  min-height: var(--zv-app-h) !important;
   overscroll-behavior: none !important;
 }
+
+/* Fill-available fallbacks for older WebKit */
+@supports (height: 100dvh) {
+  html, body { height: var(--zv-app-h, 100dvh) !important; }
+}
+@supports (height: -webkit-fill-available) {
+  html.is-standalone, html.is-standalone body {
+    min-height: -webkit-fill-available !important;
+  }
+}
+
 .iphone, #appRoot {
   width: 100% !important;
   max-width: 100% !important;
   overflow-x: hidden !important;
   box-sizing: border-box !important;
 }
+
 @media (max-width: 540px) {
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #040507 !important;
+  }
   .iphone, #appRoot {
     width: 100% !important;
-    height: 100dvh !important;
-    min-height: 100dvh !important;
-    max-height: 100dvh !important;
+    height: var(--zv-app-h) !important;
+    min-height: var(--zv-app-h) !important;
+    max-height: var(--zv-app-h) !important;
     border: none !important;
     border-radius: 0 !important;
-    padding-top: env(safe-area-inset-top, 0px) !important;
     padding-bottom: 0 !important;
+  }
+
+  /* Home Screen / standalone: respect Dynamic Island + home indicator */
+  html.is-standalone .iphone,
+  html.is-standalone #appRoot {
+    padding-top: var(--zv-safe-top) !important;
+  }
+
+  /* Safari browser: no extra top safe-area (browser chrome owns it); avoid double bottom pad */
+  html.is-browser .iphone,
+  html.is-browser #appRoot {
+    padding-top: 0 !important;
+  }
+
+  /* Hide mock device chrome on real phones */
+  .status-bar, .home-indicator {
+    display: none !important;
   }
 }
 
@@ -10854,7 +10912,7 @@ html, body {
   flex: 1 1 auto !important;
   min-width: 0 !important;
   max-width: 100% !important;
-  padding: 2px 18px 2px 2px !important; /* trailing pad so last tile can clear the fade */
+  padding: 2px 18px 2px 2px !important;
   margin: 0 !important;
   scrollbar-width: none !important;
   -webkit-mask-image: linear-gradient(to right, #000 0%, #000 calc(100% - 22px), transparent 100%) !important;
@@ -10891,7 +10949,7 @@ html, body {
   background: #06080D !important;
   position: relative !important;
   z-index: 6 !important;
-  box-shadow: -14px 0 16px 8px #06080D !important; /* soft occlude behind pinned cluster */
+  box-shadow: -14px 0 16px 8px #06080D !important;
 }
 #topBookSwitcherBar .zv-pinned-util-btn {
   width: 46px !important;
@@ -10903,20 +10961,14 @@ html, body {
   box-sizing: border-box !important;
 }
 
-/* Bottom padding = dock + gap + nav + bottom-area pads + safe-area so slate isn't under the dock */
-:root {
-  --zv-dock-h: 60px;
-  --zv-nav-h: 62px;
-  --zv-dock-gap: 14px;
-  --zv-bottom-pad: 20px;
-}
+/* Bottom padding = dock + gap + nav + bottom-area pads + mode-aware safe-area */
 .scroll-view, #mainScroll {
   flex: 1 1 0% !important;
   min-height: 0 !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
   -webkit-overflow-scrolling: touch !important;
-  padding-bottom: calc(var(--zv-dock-h) + var(--zv-dock-gap) + var(--zv-nav-h) + var(--zv-bottom-pad) + env(safe-area-inset-bottom, 0px) + 24px) !important;
+  padding-bottom: calc(var(--zv-dock-h) + var(--zv-dock-gap) + var(--zv-nav-h) + var(--zv-bottom-pad) + var(--zv-safe-bottom) + 24px) !important;
   box-sizing: border-box !important;
   width: 100% !important;
   max-width: 100% !important;
@@ -10932,7 +10984,7 @@ html, body {
   display: flex !important;
   flex-direction: column !important;
   gap: var(--zv-dock-gap) !important;
-  padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+  padding: 10px 12px calc(10px + var(--zv-safe-bottom)) !important;
   box-sizing: border-box !important;
   pointer-events: none !important;
   background: linear-gradient(180deg, rgba(4,5,7,0) 0%, rgba(4,5,7,0.92) 22%, #040507 48%, #040507 100%) !important;
@@ -10941,22 +10993,100 @@ html, body {
 .zv-picks-dock { order: 0 !important; }
 .tab-bar { order: 1 !important; min-height: var(--zv-nav-h) !important; height: auto !important; }
 
-/* Keep content from clipping on the right at any phone width */
 #tabView-board, #tabView-audit, #tabView-autobuild, #tabView-settings,
 .scroll-view > * {
   max-width: 100% !important;
   box-sizing: border-box !important;
   overflow-x: hidden !important;
 }
+
+/* Debug hook for QA — invisible unless ?zvDebugLayout=1 */
+html[data-zv-debug-layout="1"]::before {
+  content: attr(data-display-mode) " " var(--zv-app-h);
+  position: fixed;
+  top: calc(4px + var(--zv-safe-top));
+  right: 8px;
+  z-index: 99999;
+  font: 10px/1.2 ui-monospace, monospace;
+  color: #30D158;
+  background: rgba(0,0,0,0.72);
+  padding: 4px 6px;
+  border-radius: 6px;
+  pointer-events: none;
+}
 </style>
 <script>
-/* ZeroVig v26.7 layout + version bump */
+/* ZeroVig v26.8 layout + standalone/browser mode + version bump */
 (function(){
-  window.ZV_VERSION = "v26.7";
+  window.ZV_VERSION = "v26.8";
   try {
     var meta = document.querySelector('meta[name="zerovig-version"]');
-    if (meta) meta.setAttribute("content", "v26.7");
+    if (meta) meta.setAttribute("content", "v26.8");
   } catch(e){}
+
+  function readSafe(name){
+    try {
+      var probe = document.createElement("div");
+      probe.style.cssText = "position:fixed;visibility:hidden;pointer-events:none;padding:env(" + name + ", 0px);";
+      document.documentElement.appendChild(probe);
+      var v = parseFloat(getComputedStyle(probe).paddingTop) || 0;
+      probe.remove();
+      return v;
+    } catch(e){ return 0; }
+  }
+
+  function isStandalone(){
+    try {
+      if (window.navigator && window.navigator.standalone === true) return true;
+      if (window.matchMedia) {
+        if (window.matchMedia("(display-mode: standalone)").matches) return true;
+        if (window.matchMedia("(display-mode: fullscreen)").matches) return true;
+      }
+    } catch(e){}
+    return false;
+  }
+
+  function applyMode(){
+    var root = document.documentElement;
+    var on = isStandalone();
+    root.classList.toggle("is-standalone", on);
+    root.classList.toggle("is-browser", !on);
+    root.dataset.displayMode = on ? "standalone" : "browser";
+    try {
+      var params = new URLSearchParams(location.search || "");
+      if (params.get("zvDebugLayout") === "1") root.dataset.zvDebugLayout = "1";
+    } catch(e){}
+
+    // Mode-aware safe areas: standalone uses insets; browser avoids double-padding top
+    var top = readSafe("safe-area-inset-top");
+    var bottom = readSafe("safe-area-inset-bottom");
+    if (!on) {
+      // Safari already reserves chrome; keep bottom home-indicator only when non-zero
+      top = 0;
+    }
+    root.style.setProperty("--zv-safe-top", Math.max(0, Math.round(top)) + "px");
+    root.style.setProperty("--zv-safe-bottom", Math.max(0, Math.round(bottom)) + "px");
+  }
+
+  function applyViewportHeight(){
+    var root = document.documentElement;
+    var h = 0;
+    try {
+      if (window.visualViewport && window.visualViewport.height) {
+        h = window.visualViewport.height;
+        root.style.setProperty("--zv-vv-offset-top", Math.round(window.visualViewport.offsetTop || 0) + "px");
+      }
+    } catch(e){}
+    if (!h) {
+      h = window.innerHeight || document.documentElement.clientHeight || 0;
+    }
+    if (h > 0) {
+      root.style.setProperty("--zv-app-h", Math.round(h) + "px");
+    } else {
+      root.style.setProperty("--zv-app-h", "100dvh");
+    }
+  }
+
   function measureBottomStack(){
     try {
       var dock = document.querySelector(".zv-picks-dock");
@@ -10972,23 +11102,49 @@ html, body {
       }
     } catch(e){}
   }
-  function boot(){
+
+  function recompute(){
+    applyMode();
+    applyViewportHeight();
     measureBottomStack();
-    window.addEventListener("resize", measureBottomStack);
-    window.addEventListener("orientationchange", measureBottomStack);
-    // Remeasure after dock re-renders
+  }
+
+  function boot(){
+    recompute();
+    window.addEventListener("resize", recompute);
+    window.addEventListener("orientationchange", function(){
+      setTimeout(recompute, 50);
+      setTimeout(recompute, 300);
+    });
+    try {
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", recompute);
+        window.visualViewport.addEventListener("scroll", recompute);
+      }
+    } catch(e){}
+    try {
+      if (window.matchMedia) {
+        ["standalone", "fullscreen"].forEach(function(mode){
+          var mq = window.matchMedia("(display-mode: " + mode + ")");
+          if (mq.addEventListener) mq.addEventListener("change", recompute);
+          else if (mq.addListener) mq.addListener(recompute);
+        });
+      }
+    } catch(e){}
     var mount = document.getElementById("floatingCapsuleMount");
     if (mount && window.MutationObserver) {
       new MutationObserver(function(){ measureBottomStack(); }).observe(mount, {childList:true, subtree:true, characterData:true});
     }
-    setTimeout(measureBottomStack, 300);
-    setTimeout(measureBottomStack, 1200);
+    setTimeout(recompute, 300);
+    setTimeout(recompute, 1200);
   }
+
+  // Mode class should already be set by the head bootstrap; refresh after DOM ready
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();
 })();
 </script>
-<!-- ZV_V26_7_END -->
+<!-- ZV_V26_8_END -->
 
 </body>
 </html>
